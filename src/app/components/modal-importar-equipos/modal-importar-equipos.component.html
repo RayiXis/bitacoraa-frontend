@@ -1,0 +1,120 @@
+<ion-header mode="ios">
+  <ion-toolbar>
+    <ion-title>Importar Equipos</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="outline" color="danger" (click)="cancelSolicitud()">
+        Cancelar
+        <ion-icon slot="end" name="close-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-item (click)="inputDocument()" class="contenedor-btn-file">
+    <ion-label>*{{ txtDefault }}</ion-label>
+    <!-- Input para cargar la imagen -->
+    <input
+      #fileInput
+      id="file"
+      accept=".xls, .xlsx"
+      multiple="false"
+      type="file"
+      hidden
+    />
+    <ion-icon name="document-attach-outline"></ion-icon>
+  </ion-item>
+
+  <ion-item>
+    <div class="user-container">
+      <ion-note color="danger" *ngIf="!isUserSelected">*Se debe asginar al director de una dirección*</ion-note
+      >
+      <ion-label>Vincular equipos a:</ion-label>
+      <div class="user-info">
+        <ion-text *ngIf="isUserSelected">
+          {{ selectedUser.name }} {{ selectedUser.lastname }}
+        </ion-text>
+        <ion-button
+          id="modal-usuarios"
+          *ngIf="!isUserSelected"
+          class="btnModalUser"
+          size="small"
+          mode="ios"
+          fill="outline"
+        >
+          Buscar usuario
+          <ion-icon slot="end" name="person"></ion-icon>
+        </ion-button>
+        <ion-button
+          id="modal-usuarios"
+          color="warning"
+          *ngIf="isUserSelected"
+          size="small"
+          mode="ios"
+          fill="outline"
+        >
+          Cambiar usuario
+          <ion-icon slot="end" name="person"></ion-icon>
+        </ion-button>
+
+        <!-- ========================  MODAL USUARIOS  ======================== -->
+        <ion-modal
+          #modal
+          trigger="modal-usuarios"
+          [initialBreakpoint]="0.25"
+          [breakpoints]="[0.25, 0.5, 0.75]"
+          [backdropBreakpoint]="0.5"
+        >
+          <ng-template>
+            <ion-content>
+              <ion-searchbar
+                placeholder="Buscar usuario"
+                (ionInput)="filterUsers($event)"
+                (click)="modal.setCurrentBreakpoint(0.75)"
+              ></ion-searchbar>
+              <ion-list>
+                <ion-item
+                  style="cursor: pointer"
+                  *ngFor="let user of filteredUsers"
+                  (click)="selectUser(user)"
+                >
+                  <ion-avatar slot="start">
+                    <ion-img src="assets/img/userAvatar.png"></ion-img>
+                  </ion-avatar>
+                  <ion-label>
+                    <h2>{{ user.name }} {{ user.lastname }}</h2>
+                    <p>{{ user.job }}(a)</p>
+                    <p *ngIf="user.direccionName !== 'N/A'">{{ user.direccionName }}</p>
+                    <p *ngIf="user.direccionName === 'N/A'">{{ user.secretariaName }}</p>
+                  </ion-label>
+                </ion-item>
+              </ion-list>
+              <div *ngIf="filteredUsers!.length <= 0" class="ion-padding">
+                <ion-note color="danger">Usuario no encontrado</ion-note>
+              </div>
+            </ion-content>
+          </ng-template>
+        </ion-modal>
+      </div>
+    </div>
+    <ion-icon slot="end" src="/assets/icon/cabildo.svg"></ion-icon>
+  </ion-item>
+</ion-content>
+
+<ion-footer mode="ios">
+  <ion-progress-bar
+    type="indeterminate"
+    *ngIf="isProgressVisible"
+  ></ion-progress-bar>
+  <ion-button
+    [disabled]="isProgressVisible"
+    size="large"
+    mode="ios"
+    expand="block"
+    (click)="importDoc()"
+    color="success"
+  >
+    Importar
+    <ion-icon slot="end" name="cloud-download-outline"></ion-icon>
+  </ion-button>
+</ion-footer>

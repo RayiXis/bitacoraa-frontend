@@ -1,0 +1,29 @@
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+ion-spinner {
+  width: 60px;
+  height: 60px;
+}
+
+.button-row {
+  display: flex;
+  justify-content: space-between; /* Espacio entre botones */
+}
+
+.button-row ion-button {
+  flex: 1; /* Los botones ocuparán el mismo espacio */
+  margin: 10px; /* Margen entre botones, ajusta según sea necesario */
+}
+
+.button-row ion-button:first-child {
+  margin-left: 5px; /* Quitar margen izquierdo del primer botón */
+}
+
+.button-row ion-button:last-child {
+  margin-right: 5px; /* Quitar margen derecho del último botón */
+}

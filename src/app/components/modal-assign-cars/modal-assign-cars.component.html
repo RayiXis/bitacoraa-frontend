@@ -1,0 +1,179 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>ASIGNAR VEHICULO</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="danger" (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>Cancelar
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <!-- BUSCAR USUARIO A VINCULAR -->
+    <ion-item>
+      <div class="user-container">
+        <ion-label>usuario nuevo a vincular:</ion-label>
+        <div class="user-info">
+          <ion-text *ngIf="isUserSelected">
+            {{ selectedUser.name }} {{ selectedUser.lastname }}
+          </ion-text>
+          <ion-button
+            id="modal-usuarios"
+            *ngIf="!isUserSelected"
+            class="btnModalUser"
+            size="small"
+            mode="ios"
+            fill="outline"
+          >
+            Buscar usuario
+            <ion-icon slot="end" name="person"></ion-icon>
+          </ion-button>
+          <ion-button
+            id="modal-usuarios"
+            color="warning"
+            *ngIf="isUserSelected"
+            size="small"
+            mode="ios"
+            fill="outline"
+          >
+            Cambiar usuario
+            <ion-icon slot="end" name="person"></ion-icon>
+          </ion-button>
+        </div>
+        <ion-modal
+          #modal
+          trigger="modal-usuarios"
+          [initialBreakpoint]="0.25"
+          [breakpoints]="[0.25, 0.5, 0.75]"
+          [backdropBreakpoint]="0.5"
+        >
+          <ng-template>
+            <ion-content>
+              <ion-searchbar
+                placeholder="Buscar usuario"
+                (ionInput)="filterUsers($event)"
+                (click)="modal.setCurrentBreakpoint(0.75)"
+              ></ion-searchbar>
+              <ion-list>
+                <ion-item
+                  style="cursor: pointer"
+                  *ngFor="let user of filteredUsers"
+                  (click)="selectUser(user)"
+                >
+                  <ion-avatar slot="start">
+                    <ion-img src="assets/img/userAvatar.png"></ion-img>
+                  </ion-avatar>
+                  <ion-label>
+                    <h2>{{ user.name }} {{ user.lastname }}</h2>
+                    <p>{{ user.email }}</p>
+                    <ion-chip color="primary">{{
+                      user.secretariaName
+                    }}</ion-chip>
+                    <ion-chip color="tertiary">{{
+                      user.direccionName
+                    }}</ion-chip>
+                    <ion-chip color="success">{{ user.job }}</ion-chip>
+                  </ion-label>
+                </ion-item>
+              </ion-list>
+              <div *ngIf="filteredUsers!.length <= 0" class="ion-padding">
+                <ion-note color="danger">Usuario no encontrado</ion-note>
+              </div>
+            </ion-content>
+          </ng-template>
+        </ion-modal>
+      </div>
+    </ion-item>
+
+    <!-- EQUIPO VINCULADO A UN USUARIO -->
+    <ion-item>
+      <ion-label position="stacked">Vehiculo vinculado a:</ion-label>
+      <ion-text>{{ ownerDevice.name }} {{ ownerDevice.lastname }}</ion-text>
+    </ion-item>
+
+    <!-- MARCA -->
+    <ion-item>
+      <ion-label position="stacked">Marca del vehiculo:</ion-label>
+      <ion-text>{{ cars.brand }}</ion-text>
+    </ion-item>
+
+    <!-- MODELO -->
+    <ion-item>
+      <ion-label position="stacked">Modelo:</ion-label>
+      <ion-text>{{ cars.model }}</ion-text>
+    </ion-item>
+
+    <!-- TIPO DE CARROCERIA -->
+    <ion-item>
+      <ion-label position="stacked">Tipo:</ion-label>
+      <ion-text>{{ cars.class }}</ion-text>
+    </ion-item>
+
+    <!-- PLACAS -->
+    <ion-item>
+      <ion-label position="stacked">Placas:</ion-label>
+      <ion-text>{{ cars.licensePlates }}</ion-text>
+    </ion-item>
+
+    <!-- COLOR -->
+    <ion-item>
+      <ion-label position="stacked">Color:</ion-label>
+      <ion-text>{{ cars.color }}</ion-text>
+    </ion-item>
+
+    <!-- NUMERO DE SERIE -->
+    <ion-item>
+      <ion-label position="stacked">Numero de serie:</ion-label>
+      <ion-text>{{ cars.serialNumber }}</ion-text>
+    </ion-item>
+
+    <!-- OBSERVACIONES -->
+    <ion-item>
+      <ion-label position="stacked">Observaciones:</ion-label>
+      <ion-text>{{ cars.observations }}</ion-text>
+    </ion-item>
+
+    <!-- LOCALIZACION -->
+    <ion-item>
+      <ion-label position="stacked">Localizacion:</ion-label>
+      <ion-text>{{ cars.location }}</ion-text>
+    </ion-item>
+
+    <!-- FOTOS DEL EQUIPO -->
+    <swiper-container
+      class="mySwiper"
+      pagination="true"
+      grab-cursor="true"
+      pagination-clickable="true"
+    >
+      <ng-container>
+        <swiper-slide *ngFor="let fotos of cars.photos">
+          <ion-col *ngIf="cars.photos.length >= 1" size="12" sizeMd="4">
+            <ion-item>
+              <ion-img
+                [src]="apiUrl + '/img/Car/' + fotos"
+                [alt]="fotos"
+              ></ion-img>
+            </ion-item>
+          </ion-col>
+        </swiper-slide>
+      </ng-container>
+    </swiper-container>
+  </ion-list>
+</ion-content>
+
+<ion-footer class="ion-no-border button-container">
+  <div class="tooltip-container" [class.disabled]="selectedUser === undefined">
+    <ion-button
+      (click)="changeOwner(cars._id)"
+      shape="round"
+      [disabled]="selectedUser === undefined"
+      >Asignar periferico</ion-button
+    >
+    <div class="tooltip" *ngIf="selectedUser === undefined">
+      No se ha seleccionado un usuario
+    </div>
+  </div>
+</ion-footer>

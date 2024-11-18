@@ -1,0 +1,104 @@
+ion-content {
+  display: flex;
+  flex-direction: column;
+  --overflow: auto; /* Permitir el desplazamiento */
+  max-height: calc(
+    100vh - 200px
+  ); /* Ajustar la altura máxima según sea necesario */
+}
+.input-group {
+  ion-item {
+    width: calc(100% - 40px);
+    margin: 10px 20px;
+  }
+
+  ion-label {
+    font-size: 20px;
+  }
+
+  ion-input {
+    --padding-start: 8px;
+    --padding-end: 8px;
+  }
+}
+
+.btns {
+  display: flex;
+  justify-content: center;
+}
+
+.btnMd {
+  --border-radius: 10px;
+}
+
+ion-footer.button-container {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  height: auto;
+}
+
+ion-button {
+  max-width: 200px;
+}
+
+.dropdown-list {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  position: relative;
+  z-index: 1000;
+}
+
+.dropdown-item {
+  padding: 16px;
+  font-size: 16px;
+}
+
+.equipment-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+ion-item {
+  cursor: pointer;
+}
+
+ion-item:hover {
+  background-color: #f0f0f0;
+}
+
+.status-label {
+  margin-left: 8px;
+  font-size: 14px;
+  color: white;
+}
+
+.status-pending {
+  --background: red;
+}
+
+.status-in-progress {
+  --background: yellow;
+}
+
+.status-completed {
+  --background: green;
+}
+.btnModalUser {
+  margin-top: 10px;
+}
+.user-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 15px;
+}

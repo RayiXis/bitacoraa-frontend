@@ -1,0 +1,176 @@
+ion-text {
+  h1 {
+    text-transform: uppercase;
+    margin: 0 auto 20px 8px;
+    font-size: 40px;
+    font-weight: bolder;
+  }
+}
+.noSindicaturaData {
+  margin: 20px auto;
+  width: 100%;
+  text-align: center;
+}
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50%;
+}
+ion-spinner {
+  width: 80px;
+  height: 80px;
+}
+.status-circle {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.status-nodisponible {
+  background-color: #ef0000;
+}
+.status-todos {
+  background-color: #7b7b7b;
+}
+.status-disponible {
+  background-color: #2dd36f;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 10px;
+
+    thead th,
+    tbody td {
+      border-bottom: 1px solid #dddddd;
+      padding: 8px;
+      text-align: center;
+      font-weight: bolder;
+    }
+
+    thead th {
+      background-color: #d9d9d9;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    td:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+.shadow-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 999;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+
+  ion-searchbar {
+    padding: 8px;
+    margin-left: 8px;
+    width: 40%;
+    max-width: 400px;
+    flex: 1;
+  }
+
+  ion-button {
+    margin-left: 8px;
+    flex-shrink: 0; /* Evita que los botones se encojan */
+    display: flex;
+    align-items: center;
+  }
+
+  ion-icon {
+    margin-left: 8px;
+    width: 30px;
+    height: 30px;
+  }
+}
+
+.butonsIcon {
+  display: flex;
+  justify-content: flex-end;
+  flex-grow: 1;
+
+  .icons {
+    cursor: pointer;
+    height: 25px;
+    margin-right: 15px;
+    width: 25px;
+    transition: transform 0.3s ease;
+  }
+
+  .icons:active {
+    transform: scale(0.8);
+  }
+}
+
+.rowPage {
+  display: flex;
+  flex-direction: row;
+  width: 98%;
+  justify-content: flex-end;
+  color: #9b9898;
+
+  & ion-icon {
+    cursor: pointer;
+  }
+
+  .rows {
+    & span {
+      margin-left: 20px;
+    }
+  }
+
+  .pages {
+    margin-left: 50px;
+
+    & ion-icon {
+      margin-left: 20px;
+    }
+  }
+}
+@media screen and (max-width: 768px) {
+  .desktop-table {
+    display: none;
+  }
+
+  .mobile-cards {
+    display: block;
+
+    ion-card-header {
+      display: flex;
+      align-items: center;
+
+      ion-checkbox {
+        margin-right: 10px;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 769px) {
+  .mobile-cards {
+    display: none;
+  }
+}

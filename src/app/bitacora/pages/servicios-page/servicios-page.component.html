@@ -1,0 +1,37 @@
+<ion-content id="main-content" class="servicios-content">
+  <div class="center-box">
+    <div class="servicios-box">
+      <ion-title>Crear servicio</ion-title>
+
+      <form [formGroup]="serviciosForm">
+        <!--Servicio-->
+        <ion-item [class.error]="name.invalid && name.touched">
+          <ion-label position="floating">Nombre del nuevo servicio:</ion-label>
+          <ion-input type="text" formControlName="name"></ion-input>
+        </ion-item>
+        <!--Descripcion del problema-->
+        <ion-item [class.error]="description.invalid && description.touched">
+          <ion-label position="floating">Descripción del problema:</ion-label>
+          <ion-input type="text" formControlName="description"></ion-input>
+        </ion-item>
+        <!--Tiempo estimado-->
+        <ion-item
+          [class.error]="estimatedtime.invalid && estimatedtime.touched"
+        >
+          <ion-label>Tiempo estimado:</ion-label>
+          <ion-input
+            type="number"
+            min="0"
+            formControlName="estimatedtime"
+          ></ion-input>
+          <ion-note slot="end">hora(s)</ion-note>
+        </ion-item>
+
+        <ion-button expand="full" (click)="registrarServicio()" shape="round"
+          >AGREGAR SERVICIO</ion-button
+        >
+        <p><a (click)="cancelar()">Cancelar</a></p>
+      </form>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,42 @@
+ion-content.servicios-content {
+  height: 100vh;
+  display: grid;
+  place-items: center;
+
+  .center-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+
+  .servicios-box {
+    width: 300px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+
+    form {
+      ion-item {
+        ion-label {
+          padding: auto;
+          font-size: 15px;
+        }
+
+        ion-button {
+          margin-top: 20px;
+          text-transform: capitalize;
+          transition: background-color 0.3s;
+
+          &:hover {
+            background-color: #f4f5f8;
+          }
+        }
+
+        p {
+          margin-top: 10px;
+        }
+      }
+    }
+  }
+}

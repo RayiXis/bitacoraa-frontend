@@ -1,0 +1,49 @@
+<ion-content class="resetpass-content">
+  <div class="center-box">
+    <!--Contenedor principal centrado-->
+    <div class="resetpass-box">
+      <!--Contenedor del formulario de inicio de sesión-->
+      <h2 class="resetpass-title">BITACORA</h2>
+      <h3 class="resetpass-subtitle">INSERTE CORREO ELECTRONICO</h3>
+      <form [formGroup]="resetpassFormSlide1" (ngSubmit)="onSubmit()">
+        <!--Campo para correo electronico-->
+        <ion-item [class.error]="email.invalid && email.touched">
+          <ion-label position="floating"
+            >Dirección de email de contacto</ion-label
+          >
+          <ion-input
+            aria-label="Email"
+            type="email"
+            formControlName="email"
+            required
+          >
+          </ion-input>
+          <ion-icon name="mail" slot="start"></ion-icon>
+
+          <!--Icono de advertencia si el campo es inválido-->
+          <ion-icon
+            name="asterisk"
+            [color]="email.invalid && email.touched ? 'danger' : 'medium'"
+            slot="end"
+          ></ion-icon>
+        </ion-item>
+        <!--Mensaje de error si el campo de correo es inválido y se ha tocado-->
+        <p *ngIf="email.invalid && email.touched" class="required-text">
+          <ion-icon name="alert-circle" color="danger"></ion-icon>
+          Correo electronico es obligatorio
+        </p>
+
+        <!--Botón para enviar codigo de seguridad-->
+        <ion-button
+          class="center-button"
+          (click)="onSubmit()"
+          shape="round"
+          [disabled]="!resetpassFormSlide1.valid"
+          >ENVIAR CORREO DE CAMBIO</ion-button
+        >
+        <!--Enlace para regresar a pagina anterior-->
+        <p><a (click)="cancelar()">Cancelar</a></p>
+      </form>
+    </div>
+  </div>
+</ion-content>

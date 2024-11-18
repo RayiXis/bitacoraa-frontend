@@ -1,0 +1,256 @@
+.body {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  place-items: center;
+  max-width: 80rem;
+}
+
+@media (max-width: 1002px) {
+  .body {
+    grid-template-columns: 1fr;
+    place-items: center;
+  }
+
+  .miEquipo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .specs {
+      height: 300px;
+      width: 330px;
+    }
+  }
+
+}
+
+@media (max-width: 629px) {
+  .body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .miEquipo {
+      .specs {
+        height: 300px;
+        width: 330px;
+      }
+    }
+
+    .btns {
+      place-items: center;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 5px;
+      margin-right: 30px;
+      ion-button{
+        font-size: 12px;
+      }
+    }
+
+    .titleEquipo {
+      h3 {
+        font-size: 20px;
+      }
+
+      ion-icon {
+        height: 25px;
+        width: 25px;
+      }
+    }
+
+    // .servicios {
+    //   height: 350px;
+    //   width: 330px;
+
+    //   h3 {
+    //     font-size: 25px;
+    //   }
+    // }
+  }
+}
+
+.miEquipo {
+  .title {
+    display: flex;
+    align-items: center;
+    text-transform: capitalize;
+    font-weight: bold;
+
+    h2 {
+      margin-right: 30px;
+    }
+
+    p {
+      color: #92949C;
+      margin-top: 25px;
+    }
+  }
+
+  .specs {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    border-radius: 10px;
+    background-color: var(--ion-color-warning-contrast);
+    color: white;
+
+    span {
+      color: #92949C;
+    }
+
+    ion-label {
+      margin: 0 auto;
+    }
+  }
+
+  .pc {
+    display: flex;
+    align-items: center;
+
+    ion-icon {
+      font-size: 25px;
+      margin-right: 5px;
+      cursor: pointer;
+    }
+
+    p {
+      cursor: pointer;
+      text-transform: capitalize;
+      font-weight: bold;
+    }
+  }
+}
+
+// .servicios {
+//   background-color: var(--ion-color-warning-contrast);
+//   border-radius: 10px;
+//   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+//   color: white;
+//   font-weight: 300;
+//   height: 500px;
+//   padding: 20px;
+//   text-transform: capitalize;
+//   width: 476px;
+
+//   .image {
+//     transform: translateY(5hv);
+//     ion-avatar {
+//       margin: 0 auto;
+//       width: 20vh;
+//       height: 20vh;
+//       border: 3px solid var(--ion-color-secondary);
+//       padding: 0.6vh;
+//       margin-bottom: 6vh;
+//     }
+//   }
+
+//   ion-item.profile {
+//     --background: transparent;
+
+//     ion-label{
+//       color: var(--ion-color-secondary);
+//       font-size: 1.2rem;
+//       font-weight: 600;
+//       p {
+//         font-size: .7rem;
+//         font-weight: bold;
+//         margin-top: 8px;
+//       }
+//     }
+//   }
+
+// }
+
+.accionesEquipo {
+  margin-top: 50px;
+
+  }
+
+.btnMd {
+  --border-radius: 10px;
+}
+
+.titleEquipo {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  h3 {
+    color: #92949C;
+    font-size: 30px;
+    font-weight: bolder;
+    text-transform: uppercase;
+  }
+
+  ion-icon {
+    width: 40px;
+    height: 40px;
+    margin-top: 15px;
+    margin-left: 10px;
+  }
+}
+
+.btns {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 10px;
+}
+
+.btnAgregar {
+  background-color: #3880FF;
+  border-radius: 10px;
+  border: 1px solid #3880FF;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+  color: white;
+  margin-right: 20px;
+  padding: 10px 35px;
+  text-transform: capitalize;
+  transition: background-color 0.3s;
+
+  &:hover {
+    color: #3880FF;
+    background-color: white;
+  }
+}
+
+.btnDarBaja {
+  background-color: #EB445A;
+  border-radius: 10px;
+  border: 1px solid #EB445A;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+  color: white;
+  margin-right: 20px;
+  padding: 10px 35px;
+  text-transform: capitalize;
+  transition: background-color 0.3s;
+
+  &:hover {
+    color: #EB445A;
+    background-color: white;
+  }
+}
+
+.btnTraspaso {
+  background-color: #5260FF;
+  border-radius: 10px;
+  border: 1px solid #5260FF;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+  color: white;
+  margin-right: 20px;
+  padding: 10px 35px;
+  text-transform: capitalize;
+  transition: background-color 0.3s;
+
+  &:hover {
+    color: #5260FF;
+    background-color: white;
+  }
+}
+
+// .mySwiper {
+//   font-size: 15px;
+//   height: 340px;
+// }

@@ -1,0 +1,220 @@
+<ion-content id="main-content" class="ion-padding">
+  <div class="title">
+    <h1 class="ion-text-uppercase">Mis datos</h1>
+    <ion-icon src="/assets/icon/usuario2.svg"></ion-icon>
+  </div>
+
+  <section class="misDatos" *ngIf="datosEmpleado">
+    <div class="columna-1">
+      <ion-item lines="none" class="labels">
+        <ion-label position="stacked">Nombre:</ion-label>
+        <p>{{ datosEmpleado.name }} {{ datosEmpleado.lastname }}</p>
+      </ion-item>
+
+      <ion-item lines="none" class="labels">
+        <ion-label position="stacked">Dirección:</ion-label>
+        <p>{{ datosEmpleado.administrativeUnitName }}</p>
+      </ion-item>
+
+      <ion-item lines="none" class="labels">
+        <ion-label position="stacked">Estación de Trabajo:</ion-label>
+        <p>{{ datosEmpleado.job }}</p>
+      </ion-item>
+
+      <!-- <ion-item lines="none" class="labels">
+        <ion-label position="stacked">Teléfono Oficina:</ion-label>
+        <p>no found it😔</p>
+      </ion-item> -->
+    </div>
+    <div class="columna-2">
+      <ion-item class="labels">
+        <ion-label position="stacked">Correo Electrónico:</ion-label>
+        <p>{{ datosEmpleado.email }}</p>
+      </ion-item>
+
+      <!-- <ion-item class="puesto">
+        <ion-label position="stacked">Configurar Puesto:</ion-label>
+        <button (click)="configurarPuesto()">
+          <ion-icon src="/assets/icon/cogIcon.svg"></ion-icon>
+        </button>
+
+      </ion-item> -->
+
+      <ion-item lines="none" class="contraseña">
+        <ion-label position="stacked">Cambiar contraseña:</ion-label>
+        <button (click)="changedPassword()">
+          <ion-icon src="/assets/icon/password.svg"></ion-icon
+          ><span>Cambiar</span>
+        </button>
+      </ion-item>
+    </div>
+    <div
+      class="columna-3"
+      *ngIf="datosEmpleado && datosEmpleado.devices.length === 0"
+    >
+      <h2>registrar equipo</h2>
+
+      <div class="registrarEquipo">
+        <p>¿usted tiene su mando un dispositivo?</p>
+        <ion-radio-group
+          [(ngModel)]="defaultValue"
+          (ionChange)="darAltaEquipo($event)"
+        >
+          <ion-radio value="si">si</ion-radio><br />
+          <ion-radio value="no">no</ion-radio>
+        </ion-radio-group>
+        <p *ngIf="valorSeleccionado">dar de alta su equipo</p>
+        <ion-button (click)="openModalEquipo()" *ngIf="valorSeleccionado"
+          >agregar</ion-button
+        >
+      </div>
+    </div>
+
+    <!-- <div class="columna-3" *ngIf="equipRegister"> -->
+    <div
+      class="columna-3"
+      *ngIf="datosEmpleado && datosEmpleado.devices.length >= 1"
+    >
+      <h2>equipo(s) / periférico(s)</h2>
+
+      <div class="equipoRegistrado">
+        <swiper-container
+          class="mySwiper"
+          pagination="true"
+          grab-cursor="true"
+          pagination-clickable="true"
+          space-between="30"
+        >
+          <swiper-slide *ngFor="let equipo of equiposRegistrados">
+            <p>
+              Descripción: <span>{{ equipo.description }}</span>
+            </p>
+            <p>
+              Dirección IP:
+              <span>{{ equipo.assigned_ip || equipo.ip || "No IP" }}</span>
+            </p>
+            <ion-button color="none" fill="clear" (click)="showDetails(equipo)">
+              Mostrar detalles
+            </ion-button>
+          </swiper-slide>
+
+          <swiper-slide class="addEquip">
+            <p>Agregar otro equipo</p>
+            <ion-button color="none" fill="clear" (click)="openModalEquipo()">
+              Agregar equipo
+            </ion-button>
+          </swiper-slide>
+        </swiper-container>
+
+        <!-- Modal de detalles del equipo -->
+        <ion-modal
+          mode="ios"
+          [isOpen]="isModalOpen"
+          (ionModalDidDismiss)="closeModal()"
+        >
+          <ng-template>
+            <ion-header>
+              <ion-toolbar>
+                <ion-title>Detalles del equipo</ion-title>
+                <ion-buttons slot="end">
+                  <ion-button (click)="closeModal()">Cerrar</ion-button>
+                </ion-buttons>
+              </ion-toolbar>
+            </ion-header>
+
+            <ion-content class="ion-padding">
+              <ion-list>
+                <ion-item>
+                  <p>
+                    <strong>Descripción:</strong>
+                    {{ equipoSeleccionado?.description }}
+                  </p>
+                </ion-item>
+                <ion-item>
+                  <p>
+                    <strong>Dirección IP:</strong>
+                    {{
+                      equipoSeleccionado?.assigned_ip ||
+                        equipoSeleccionado?.ip ||
+                        "No IP"
+                    }}
+                  </p>
+                </ion-item>
+                <ion-item *ngIf="equipoSeleccionado && equipoSeleccionado?.location">
+                  <p>
+                    <strong>Ubicación:</strong>
+                    {{ equipoSeleccionado?.location }}
+                  </p>
+                </ion-item>
+                <ion-item
+                  *ngIf="
+                    equipoSeleccionado &&
+                    equipoSeleccionado?.inventoryCode ||
+                    equipoSeleccionado?.sindicatura_Inventory_Code
+                  "
+                >
+                  <p>
+                    <strong>Código de inventario:</strong>
+                    {{
+                      equipoSeleccionado?.inventoryCode ||
+                        equipoSeleccionado?.sindicatura_Inventory_Code
+                    }}
+                  </p>
+                </ion-item>
+                <ion-item
+                  *ngIf="
+                    equipoSeleccionado &&
+                    equipoSeleccionado?.ownerName ||
+                    equipoSeleccionado?.userName
+                  "
+                >
+                  <p>
+                    <strong>Propietario:</strong>
+                    {{
+                      equipoSeleccionado?.ownerName ||
+                        equipoSeleccionado?.userName
+                    }}
+                  </p>
+                </ion-item>
+                <ion-item *ngIf="equipoSeleccionado && equipoSeleccionado?.hdd">
+                  <p><strong>HDD:</strong> {{ equipoSeleccionado?.hdd }}</p>
+                </ion-item>
+                <ion-item *ngIf="equipoSeleccionado && equipoSeleccionado?.directionEthernet">
+                  <p>
+                    <strong>Dirección Ethernet:</strong>
+                    {{ equipoSeleccionado?.directionEthernet }}
+                  </p>
+                </ion-item>
+                <ion-item>
+                  <p>
+                    <strong>Estado:</strong>
+                    {{ equipoSeleccionado?.state ? "Activo" : "Inactivo" }}
+                  </p>
+                </ion-item>
+
+                <swiper-container
+                  class="mySwiper"
+                  pagination="true"
+                  grab-cursor="true"
+                  pagination-clickable="true"
+                  *ngIf="equipoSeleccionado && equipoSeleccionado?.photos?.length >= 1"
+                >
+                  <swiper-slide *ngFor="let fotos of equipoSeleccionado.photos">
+                    <ion-col size="12" sizeMd="4">
+                      <ion-item>
+                        <ion-img
+                          [src]="bitacoraApi + '/img/equipment/' + fotos"
+                          [alt]="fotos"
+                        ></ion-img>
+                      </ion-item>
+                    </ion-col>
+                  </swiper-slide>
+                </swiper-container>
+              </ion-list>
+            </ion-content>
+          </ng-template>
+        </ion-modal>
+      </div>
+    </div>
+  </section>
+</ion-content>

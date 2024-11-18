@@ -1,0 +1,93 @@
+ion-content.login-content {
+  height: 100vh;
+  display: grid;
+  place-items: center;
+
+  .center-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .center-box {
+    //Centra el contenido de forma horizontal
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /*Ocupa toda la altura de la ventana*/
+  }
+
+  .login-box {
+    width: 300px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+
+    ion-note{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    form {
+      ion-item.error {
+        --highlight-color: #f44336;
+        --border-color: #f44336;
+
+        ion-input {
+          border-color: var(--border-color);
+        }
+
+        .required-text {
+          color: var(--highlight-color);
+        }
+
+        ion-icon[slot="end"][color="danger"] {
+          color: var(--highlight-color);
+        }
+      }
+    }
+
+    .login-title {
+      color: var(--ion-color-primary);
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 35px;
+      font-weight: 900;
+      font-style: italic;
+    }
+    .login-subtitle {
+      text-align: left;
+      margin-bottom: 5px;
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+    form {
+      ion-item {
+        ion-label {
+          padding: auto;
+          font-size: 15px;
+        }
+
+        ion-button {
+          margin-top: 15px;
+        }
+
+        p {
+          margin-top: 10px;
+          a {
+            color: var(--ion-color-primary);
+            text-decoration: none;
+          }
+        }
+
+        .required-text {
+          color: danger;
+          margin-top: 4px;
+          font-size: 12px;
+        }
+      }
+    }
+  }
+}

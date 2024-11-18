@@ -1,0 +1,95 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>CONFIGURAR PERMISOS DE</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="danger" (click)="closeModal()">
+        <ion-icon name="close-circle-outline" size="large"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-title>
+      {{ userFullName }}
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list class="input-group">
+    <!-- TELÉFONO -->
+    <ion-item>
+      <ion-label position="stacked">Número de Teléfono</ion-label>
+      <ion-input
+        type="tel"
+        [(ngModel)]="phoneNumber"
+        (ionBlur)="validatePhoneNumber()"
+        [ngClass]="{ error: phoneError }"
+        required
+        maxlength="10"
+        minlength="10"
+        placeholder="Ingresa número de teléfono"
+        required
+      ></ion-input>
+      <!-- Mensaje de advertencia en rojo -->
+      <ion-text color="danger" *ngIf="phoneError">
+        El número de teléfono debe contener 10 dígitos.
+      </ion-text>
+    </ion-item>
+
+    <!-- CAMBIAR ROL -->
+    <ion-item>
+      <ion-select
+        label="Rol"
+        placeholder="Seleccione rol"
+        [(ngModel)]="newRole"
+      >
+        <ion-select-option value="Receivership">Sindicatura</ion-select-option>
+        <ion-select-option value="Technical">Técnico</ion-select-option>
+        <ion-select-option value="Employee">Empleado</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- NIVEL DE URGENCIA -->
+    <ion-item>
+      <ion-select
+        label="Nivel de urgencia"
+        placeholder="Seleccione nivel de urgencia"
+        [(ngModel)]="selectedUrgencyLevel"
+      >
+        <ion-select-option [value]="0">Bajo</ion-select-option>
+        <ion-select-option [value]="1">Intermedio</ion-select-option>
+        <ion-select-option [value]="2">Alta</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- ABT -->
+    <ion-item>
+      <ion-select
+        label="Permisos de ABT"
+        placeholder="Seleccione permiso de ABT"
+        [(ngModel)]="isAbtActive"
+      >
+        <ion-select-option value="T">Títular</ion-select-option>
+        <ion-select-option value="P">Permiso temporal</ion-select-option>
+        <ion-select-option value="NO">Sin permisos</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- CAN REQUEST DEVICE -->
+    <ion-item>
+      <ion-toggle
+        [(ngModel)]="canRequestDevices"
+        [enableOnOffLabels]="true"
+        (ionChange)="onCanRequestToggleChange($event)"
+        color="success"
+        >Permiso de solicitar equipo</ion-toggle
+      >
+    </ion-item>
+  </ion-list>
+</ion-content>
+
+<ion-footer class="ion-no-border button-container">
+  <ion-button (click)="submit()" shape="round">
+    GUARDAR
+  </ion-button></ion-footer
+>

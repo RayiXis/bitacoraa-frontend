@@ -1,0 +1,125 @@
+ion-header {
+  ion-text {
+    h1 {
+      text-transform: uppercase;
+      margin: 0 auto 20px 8px;
+      font-size: 40px;
+      font-weight: bolder;
+    }
+  }
+
+  ion-toolbar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+
+    ion-searchbar {
+      padding: 8px;
+      margin-left: 8px;
+      width: 70%;
+      max-width: 100%;
+    }
+
+    ion-buttons {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      width: 100%;
+      gap: 10px;
+    }
+
+    @media (max-width: 767px) {
+      ion-searchbar {
+        width: 100%; // Searchbar ocupa todo el ancho en móvil
+        margin-left: 0;
+        margin-bottom: 10px;
+      }
+
+      ion-title {
+        font-size: 20px; // Reduce el tamaño del título en pantallas pequeñas
+        margin: 10px 0; // Ajusta el margen
+      }
+
+      ion-buttons {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    @media (min-width: 768px) {
+      flex-direction: row;
+      justify-content: space-between;
+
+      ion-searchbar {
+        width: 70%; // Puedes mantener un ancho menor en pantallas grandes
+      }
+
+      ion-buttons {
+        justify-content: flex-end;
+        width: auto;
+        gap: 0;
+      }
+    }
+  }
+}
+.noTechnicalData {
+  margin: 20px auto;
+  width: 100%;
+  text-align: center;
+}
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50%;
+}
+ion-spinner {
+  width: 80px;
+  height: 80px;
+}
+
+.status-circle {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.status-nodisponible {
+  background-color: #ef0000;
+}
+.status-todos {
+  background-color: #7b7b7b;
+}
+.status-disponible {
+  background-color: #2dd36f;
+}
+
+ion-content.tecnicos-content {
+  ion-segment {
+    margin-bottom: 10px;
+  }
+
+  ion-card {
+    margin: 10px;
+
+    .email-content {
+      p {
+        margin: 5px 0;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .email-content {
+        display: block;
+      }
+
+      ion-card-header {
+        ion-card-title {
+          font-size: 18px;
+        }
+      }
+    }
+  }
+}

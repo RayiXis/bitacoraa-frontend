@@ -1,0 +1,81 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-back-button
+      slot="start"
+      style="display: block"
+      (click)="modalController.dismiss()"
+    ></ion-back-button>
+    <ion-title>{{ name.toUpperCase() }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-item-group>
+    <ion-item-divider> Secretaríás </ion-item-divider>
+
+    <div style="display: flex; flex-wrap: wrap">
+      <ion-card *ngFor="let secretaria of secretarias" color="primary">
+        <ion-card-header>
+          <ion-card-title>
+            <ion-item color="primary">
+              <ion-label>{{ secretaria.name }}</ion-label>
+              <ion-buttons slot="end" *ngIf="secretaria.direcciones.length > 0">
+                <ion-button (click)="openModal(secretaria.name, secretaria.direcciones)">
+                  <ion-icon slot="icon-only" name="chevron-forward"></ion-icon>
+                </ion-button>
+              </ion-buttons>
+            </ion-item>
+          </ion-card-title>
+        </ion-card-header>
+      </ion-card>
+    </div>
+  </ion-item-group>
+
+  <ion-item-group>
+    <ion-item-divider> Direcciones </ion-item-divider>
+
+    <div style="display: flex; flex-wrap: wrap">
+      <ion-card *ngFor="let direccion of direcciones" color="primary">
+        <ion-card-header>
+          <ion-card-title>
+            <ion-item color="primary">
+              <ion-label>{{ direccion.name }}</ion-label>
+            </ion-item>
+          </ion-card-title>
+        </ion-card-header>
+      </ion-card>
+    </div>
+  </ion-item-group>
+
+  <ion-item-group>
+    <ion-item-divider> Organismos </ion-item-divider>
+
+    <div style="display: flex; flex-wrap: wrap">
+      <ion-card *ngFor="let organismo of organismos" color="primary">
+        <ion-card-header>
+          <ion-card-title>
+            <ion-item color="primary">
+              <ion-label>{{ organismo.name }}</ion-label>
+            </ion-item>
+          </ion-card-title>
+        </ion-card-header>
+      </ion-card>
+    </div>
+  </ion-item-group>
+
+  <ion-item-group>
+    <ion-item-divider> Paramunicipales </ion-item-divider>
+
+    <div style="display: flex; flex-wrap: wrap">
+      <ion-card *ngFor="let paramunicipal of paramunicipales" color="primary">
+        <ion-card-header>
+          <ion-card-title>
+            <ion-item color="primary">
+              <ion-label>{{ paramunicipal.name }}</ion-label>
+            </ion-item>
+          </ion-card-title>
+        </ion-card-header>
+      </ion-card>
+    </div>
+  </ion-item-group>
+</ion-content>

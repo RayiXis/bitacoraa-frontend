@@ -1,0 +1,32 @@
+.invite-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+
+  ion-list-header,
+  ion-label,
+  ion-title {
+    font-weight: bold;
+  }
+
+  .invite-box,
+  .email-list,
+  form,
+  ion-list {
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
+  }
+
+  ion-input {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  @media (max-width: 768px) {
+    .invite-box {
+      padding: 10px;
+    }
+  }
+}

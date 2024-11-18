@@ -1,0 +1,179 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>{{
+      inmueble ? "Editar Bien Inmueble" : "Registrar Bien Inmueble"
+    }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="danger" (click)="closeInmuebleFormAlert()">
+        <ion-icon name="close"></ion-icon>
+        Cancelar
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="inmuebleForm" (ngSubmit)="submit()">
+    <ion-list class="input-group">
+      <ion-item>
+        <ion-label position="stacked">Folio</ion-label>
+        <ion-input type="text" formControlName="folio"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Descripción del Inmueble</ion-label>
+        <ion-input formControlName="description" type="text"></ion-input>
+        <!--Mensaje al poner dato no valido o vacio-->
+        <ion-text
+          color="danger"
+          *ngIf="
+            inmuebleForm.get('propertyKey')?.invalid &&
+            inmuebleForm.get('propertyKey')?.touched
+          "
+        >
+          La descripcion del bien es obligatorio
+        </ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Ubicación</ion-label>
+        <ion-input
+          type="text"
+          formControlName="location"
+          placeholder="Ej. No Reelección y Plaza 5 de Mayo s/n"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Tipo</ion-label>
+        <ion-input
+          type="text"
+          formControlName="type"
+          placeholder="Ej. Propietario"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Superficie (Mts<sup>2</sup>)</ion-label>
+        <ion-input
+          type="text"
+          formControlName="construction"
+          placeholder="Construcción"
+        ></ion-input>
+        <div style="display: flex; align-items: center">
+          <ion-input
+            type="number"
+            formControlName="land"
+            placeholder="Terreno"
+            style="flex: 1"
+          ></ion-input>
+          <ion-text slot="end">Mts<sup>2</sup></ion-text>
+        </div>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Clave catastral</ion-label>
+        <ion-input
+          type="number"
+          formControlName="cadastralKey"
+          placeholder="Ej. 520004311027"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Valor catastral</ion-label>
+
+        <ion-input type="number" formControlName="cadastralValue">
+          <ion-text slot="start">$</ion-text></ion-input
+        >
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Status</ion-label>
+        <ion-input
+          formControlName="status"
+          placeholder="Ej. Posible vialidad"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Valor de contabilidad</ion-label>
+        <ion-input formControlName="bookValue"
+          ><ion-text slot="start">$</ion-text>
+        </ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked"
+          >Inscripción al Reg Pub de la Propiedad
+        </ion-label>
+        <ion-input formControlName="pubPropReg"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Fecha de último valuó</ion-label>
+        <ion-datetime
+          formControlName="lastAppraisalDate"
+          display-format="DD/MM/YYYY"
+          placeholder="Selecciona una fecha"
+        ></ion-datetime>
+      </ion-item>
+
+      <ion-item class="contenedor-btn-file" (click)="inputImage($event)">
+        <label class="lblName" for="file">{{ txtDefault }}</label>
+        <input
+          formControlName="photos"
+          #fileInput
+          id="file"
+          accept=".png, .jpg, jpeg"
+          multiple="true"
+          type="file"
+          (change)="onFileChange($event, 'photos')"
+        />
+        <ion-icon slot="end" size="small" name="images-outline"></ion-icon>
+      </ion-item>
+      <!-- FOTOS DEL INMUEBLE -->
+      <swiper-container
+        class="mySwiper"
+        pagination="true"
+        grab-cursor="true"
+        pagination-clickable="true"
+      >
+        <ng-container>
+          <swiper-slide *ngFor="let fotos of inmueble?.photos">
+            <ion-col *ngIf="inmueble.photos.length >= 1" size="12" sizeMd="4">
+              <ion-item>
+                <ion-img
+                  [src]="
+                    sindicaturaApi + '/documents/Properties/photos' + fotos
+                  "
+                  [alt]="fotos"
+                ></ion-img>
+              </ion-item>
+            </ion-col>
+          </swiper-slide>
+        </ng-container>
+      </swiper-container>
+
+      <ion-item class="contenedor-btn-file" (click)="inputPdf($event)">
+        <label class="lblName" for="pdfFile">{{ txtPdfDefault }}</label>
+        <input
+          formControlName="pdfs"
+          #pdfInput
+          id="pdfFile"
+          accept=".pdf"
+          multiple="true"
+          type="file"
+          (change)="onFileChange($event, 'pdfs')"
+        />
+        <ion-icon slot="end" size="small" name="document-outline"></ion-icon>
+      </ion-item>
+      <ion-progress-bar
+        type="indeterminate"
+        *ngIf="isProgressVisible"
+        [value]="progress"
+      ></ion-progress-bar>
+    </ion-list>
+
+    <ion-footer class="ion-no-border button-container">
+      <ion-button
+        type="submit"
+        [disabled]="!inmuebleForm.valid && isProgressVisible"
+        shape="round"
+        >{{
+          inmueble ? "Actualizar Bien Inmueble" : "Registrar Bien Inmueble"
+        }}</ion-button
+      >
+    </ion-footer>
+  </form>
+</ion-content>

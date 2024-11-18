@@ -1,0 +1,177 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>{{
+      isEditing ? "Editar Periférico" : "Registrar Periférico"
+    }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closePerifericosFormAlert()" color="danger"
+        ><ion-icon name="close"></ion-icon>Cancelar</ion-button
+      >
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="peripheralForm" (ngSubmit)="submit()">
+    <ion-list class="input-group">
+      <ion-item>
+        <ion-label position="stacked">Tipo de Periférico:</ion-label>
+        <ion-input type="text" formControlName="type"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Código de Inventario:</ion-label>
+        <ion-input type="text" formControlName="inventoryCode"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Descripción:</ion-label>
+        <ion-input type="text" formControlName="description"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Código IP:</ion-label>
+        <ion-input type="text" formControlName="ip"></ion-input>
+      </ion-item>
+      <ion-text
+        *ngIf="
+        peripheralForm.get('ip')?.errors?.['pattern'] &&
+        peripheralForm.get('ip')?.touched
+      "
+        color="danger"
+        class="ion-text-center"
+      >
+        <p>
+          La IP ingresada no es válida. Debe tener el formato: Ej. 192.168.0.1
+        </p>
+      </ion-text>
+      <!--Sheet modal for users-->
+      <ion-item *ngIf="hasRole('Admin', 'Technical')">
+        <div class="user-container">
+          <ion-label>Asignado a:</ion-label>
+          <div class="user-info">
+            <ion-text *ngIf="isUserSelected">
+              {{ selectedUser.name }}
+              {{ selectedUser.lastname }}
+            </ion-text>
+            <ion-button
+              id="modal-employee"
+              *ngIf="!isUserSelected"
+              class="btnModalUser"
+              size="small"
+              mode="ios"
+              fill="outline"
+              (click)="openUserModal()"
+            >
+              Buscar usuario
+              <ion-icon slot="end" name="person"></ion-icon>
+            </ion-button>
+            <ion-button
+              id="modal-employee"
+              color="warning"
+              *ngIf="isUserSelected"
+              size="small"
+              mode="ios"
+              fill="outline"
+              (click)="openUserModal()"
+            >
+              Buscar otro usuario
+              <ion-icon slot="end" name="person"></ion-icon>
+            </ion-button>
+          </div>
+          <ion-modal
+            #modalEmployee
+            trigger="modal-employee"
+            [initialBreakpoint]="0.25"
+            [breakpoints]="[0.25, 0.5, 0.75]"
+            [backdropBreakpoint]="0.5"
+          >
+            <ng-template>
+              <ion-content>
+                <ion-searchbar
+                  placeholder="Buscar usuario"
+                  (ionInput)="filterUser($event)"
+                  (click)="modalEmployee.setCurrentBreakpoint(0.75)"
+                ></ion-searchbar>
+                <ion-list>
+                  <ion-item
+                    style="cursor: pointer"
+                    *ngFor="let user of filteredUsers"
+                    (click)="selectUser(user)"
+                  >
+                    <ion-avatar slot="start">
+                      <ion-img src="assets/img/userAvatar.png"></ion-img>
+                    </ion-avatar>
+                    <ion-label>
+                      <h2>{{ user.name }} {{ user.lastname }}</h2>
+                      <p>{{ user.email }}</p>
+                    </ion-label>
+                  </ion-item>
+                </ion-list>
+                <div *ngIf="filterUser!.length <= 0" class="ion-padding">
+                  <ion-note color="danger">Usuario no encontrado</ion-note>
+                </div>
+              </ion-content>
+            </ng-template>
+          </ion-modal>
+        </div>
+      </ion-item>
+      <!-- Display selected user -->
+      <ion-item *ngIf="selectedUser">
+        <ion-label position="stacked"
+          >El periferico se le asignará a:</ion-label
+        >
+        <ion-input
+          [value]="
+            selectedUser ? selectedUser.name + ' ' + selectedUser.lastname : ''
+          "
+          readonly
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Ubicación física de resguardo</ion-label>
+        <ion-input
+          formControlName="location"
+          placeholder="Ej. Palacio Municipal"
+        ></ion-input>
+      </ion-item>
+      <!-- FOTOS -->
+      <ion-item class="contenedor-btn-file" (click)="inputImage()">
+        <label class="lblName" for="file">{{ txtDefault || 'Sin Foto' }}</label>
+        <!-- Input para cargar la imagen -->
+        <input
+          formControlName="photos"
+          #fileInput
+          id="file"
+          accept=".png, .jpg, jpeg"
+          multiple="true"
+          type="file"
+          (click)="onFileChange($event)"
+        />
+        <ion-icon slot="end" size="small" name="images-outline"></ion-icon>
+      </ion-item>
+      <!-- FOTOS DEL EQUIPO -->
+      <swiper-container
+        class="mySwiper"
+        pagination="true"
+        grab-cursor="true"
+        pagination-clickable="true"
+      >
+        <ng-container>
+          <swiper-slide *ngFor="let fotos of periferico?.photos">
+            <ion-col *ngIf="periferico.photos.length >= 1" size="12" sizeMd="4">
+              <ion-item>
+                <ion-img
+                  [src]="api + '/img/PeripheralEquipment/' + fotos"
+                  [alt]="fotos"
+                ></ion-img>
+              </ion-item>
+            </ion-col>
+          </swiper-slide>
+        </ng-container>
+      </swiper-container>
+    </ion-list>
+    <ion-footer class="ion-no-border button-container">
+      <ion-button type="submit" [disabled]="!peripheralForm.valid" shape="round"
+        >{{ isEditing ? "Terminar actualizacion" : "Terminar registro" }}
+      </ion-button>
+    </ion-footer>
+  </form>
+</ion-content>

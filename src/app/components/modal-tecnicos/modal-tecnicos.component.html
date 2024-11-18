@@ -1,0 +1,276 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>{{
+      tecnico ? "Editar Técnico" : "Registrar Técnico"
+    }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="danger" (click)="cancel()">
+        <ion-icon name="close"></ion-icon>Cancelar
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!--Contenedor del formulario-->
+  <ion-list>
+    <form [formGroup]="tecnicosForm" (ngSubmit)="onSubmit()">
+      <!--ION GRID-->
+      <ion-grid>
+        <!--NOMBRES-->
+        <ion-col size="12" size-sm="4">
+          <ion-item [class.error]="name?.invalid && name?.touched">
+            <ion-label position="stacked">NOMBRES:</ion-label>
+            <ion-input type="text" formControlName="name" required></ion-input>
+            <!-- Icono de advertencia si el campo es inválido -->
+            <ion-icon
+              slot="end"
+              name="asterisk"
+              [color]="name?.invalid && name?.touched ? 'danger' : 'medium'"
+            ></ion-icon>
+          </ion-item>
+          <!-- Mensaje de error si el campo de nombres es inválido y se ha tocado -->
+          <p
+            *ngIf="
+              tecnicosForm.get('name')?.invalid &&
+              tecnicosForm.get('name')?.touched
+            "
+            class="required-text"
+          >
+            <ion-icon name="alert-circle" color="danger"></ion-icon>
+            Los nombres son obligatorios
+          </p>
+        </ion-col>
+        <ion-col size="12" size-sm="4">
+          <ion-item [class.error]="lastname?.invalid && lastname?.touched">
+            <ion-label position="stacked">APELLIDOS:</ion-label>
+            <ion-input
+              type="text"
+              formControlName="lastname"
+              required
+            ></ion-input>
+            <!-- Icono de advertencia si el campo es inválido -->
+            <ion-icon
+              name="asterisk"
+              [color]="
+                lastname?.invalid && lastname?.touched ? 'danger' : 'medium'
+              "
+              slot="end"
+            ></ion-icon>
+          </ion-item>
+          <!-- Mensaje de error si el campo de apellidos es inválido y se ha tocado -->
+          <p
+            *ngIf="
+              tecnicosForm.get('lastname')?.invalid &&
+              tecnicosForm.get('lastname')?.touched
+            "
+            class="required-text"
+          >
+            <ion-icon name="alert-circle" color="danger"></ion-icon>
+            Los apellidos son obligatorios
+          </p>
+        </ion-col>
+        <!--JOB-->
+        <ion-col size="12" size-sm="4">
+          <ion-item [class.error]="job?.invalid && job?.touched">
+            <ion-label position="stacked"
+              >PUESTO:</ion-label
+            >
+            <ion-input type="text" formControlName="job" required></ion-input>
+            <!-- Icono de advertencia si el campo es inválido -->
+            <ion-icon
+              name="asterisk"
+              [color]="job?.invalid && job?.touched ? 'danger' : 'medium'"
+              slot="end"
+            ></ion-icon>
+          </ion-item>
+          <!-- Mensaje de error si el campo de codigo es inválido y se ha tocado -->
+          <p
+            *ngIf="
+              tecnicosForm.get('job')?.invalid &&
+              tecnicosForm.get('job')?.touched
+            "
+            class="required-text"
+          >
+            <ion-icon name="alert-circle" color="danger"></ion-icon>
+            El puesto es obligatorio
+          </p>
+        </ion-col>
+         <!--CODE-->
+         <ion-col size="12" size-sm="4">
+          <ion-item [class.error]="code?.invalid && code?.touched">
+            <ion-label position="stacked"
+              >CODIGO DE DEPENDENCIA Y DIRECCION:</ion-label
+            >
+            <ion-input type="text" formControlName="code" required></ion-input>
+            <!-- Icono de advertencia si el campo es inválido -->
+            <ion-icon
+              name="asterisk"
+              [color]="code?.invalid && code?.touched ? 'danger' : 'medium'"
+              slot="end"
+            ></ion-icon>
+          </ion-item>
+          <!-- Mensaje de error si el campo de codigo es inválido y se ha tocado -->
+          <p
+            *ngIf="
+              tecnicosForm.get('code')?.invalid &&
+              tecnicosForm.get('code')?.touched
+            "
+            class="required-text"
+          >
+            <ion-icon name="alert-circle" color="danger"></ion-icon>
+            El codigo de dependencia y direccion es obligatorio
+          </p>
+        </ion-col>
+        <!--EMAIL-->
+        <ion-col size="12" size-sm="4">
+          <ion-item [class.error]="email?.invalid && email?.touched">
+            <ion-label position="stacked">CORREO ELECTRONICO:</ion-label>
+            <ion-input
+              type="email"
+              [readonly]="editMode"
+              formControlName="email"
+              required
+            ></ion-input>
+            <!-- Icono de advertencia si el campo es inválido -->
+            <ion-icon
+              name="asterisk"
+              [color]="email?.invalid && email?.touched ? 'danger' : 'medium'"
+              slot="end"
+            ></ion-icon>
+          </ion-item>
+          <!-- Mensaje de error si el campo de telefono celular es inválido y se ha tocado -->
+          <p
+            *ngIf="
+              tecnicosForm.get('email')?.invalid &&
+              tecnicosForm.get('email')?.touched
+            "
+            class="required-text"
+          >
+            <ion-icon name="alert-circle" color="danger"></ion-icon>
+            Correo electronico obligatorio
+          </p>
+        </ion-col>
+        <!--CELULAR-->
+        <ion-col size="12" size-sm="4">
+          <ion-item [class.error]="phone?.invalid && phone?.touched">
+            <ion-label position="stacked">TELEFONO CELULAR:</ion-label>
+            <ion-input type="tel" formControlName="phone" required></ion-input>
+            <!-- Icono de advertencia si el campo es inválido -->
+            <ion-icon
+              name="asterisk"
+              [color]="phone?.invalid && phone?.touched ? 'danger' : 'medium'"
+              slot="end"
+            ></ion-icon>
+          </ion-item>
+          <!-- Mensaje de error si el campo de telefono celular es inválido y se ha tocado -->
+          <p
+            *ngIf="
+              tecnicosForm.get('phone')?.invalid &&
+              tecnicosForm.get('phone')?.touched
+            "
+            class="required-text"
+          >
+            <ion-icon name="alert-circle" color="danger"></ion-icon>
+            Telefono celular es obligatorio
+          </p>
+        </ion-col>
+        <!--CONTRASEÑA-->
+        <ion-col size="12" size-sm="4">
+          <ion-item [class.error]="password?.invalid && password?.touched">
+            <ion-label position="stacked">CONTRASEÑA:</ion-label>
+            <ion-input
+              type="password"
+              [readonly]="editMode"
+              formControlName="password"
+              required
+            ></ion-input>
+            <!-- Icono de advertencia si el campo es inválido -->
+            <ion-icon
+              name="asterisk"
+              [color]="
+                password?.invalid && password?.touched ? 'danger' : 'medium'
+              "
+              slot="end"
+            ></ion-icon>
+          </ion-item>
+          <!-- Mensaje de error si el campo de contraseña es inválido y se ha tocado -->
+          <p
+            *ngIf="
+              tecnicosForm.get('password')?.invalid &&
+              tecnicosForm.get('password')?.touched
+            "
+            class="required-text"
+          >
+            <ion-icon name="alert-circle" color="danger"></ion-icon>
+            Contraseña obligatoria
+          </p>
+        </ion-col>
+        <!--CONFIRMAR CONTRASEÑA-->
+        <ion-col size="12" size-sm="4">
+          <ion-item
+            [class.error]="confirmpassword?.invalid && confirmpassword?.value"
+          >
+            <ion-label position="stacked">CONFIRMAR CONTRASEÑA:</ion-label>
+            <ion-input
+              type="password"
+              [readonly]="editMode"
+              formControlName="confirmpassword"
+              required
+            ></ion-input>
+            <!-- Icono de advertencia si el campo es inválido -->
+            <ion-icon
+              name="asterisk"
+              [color]="
+                confirmpassword?.invalid && confirmpassword?.touched
+                  ? 'danger'
+                  : 'medium'
+              "
+              slot="end"
+            ></ion-icon>
+          </ion-item>
+          <!-- Mensaje de error si el campo de contraseña es inválido y se ha tocado -->
+          <p
+            *ngIf="
+              tecnicosForm.get('confirmpassword')?.invalid &&
+              tecnicosForm.get('confirmpassword')?.touched
+            "
+            class="required-text"
+          >
+            <ion-icon name="alert-circle" color="danger"></ion-icon>
+            No coincide con contraseña
+          </p>
+        </ion-col>
+        <!--SERVICIOS-->
+        <ion-col size="12" size-sm="4">
+          <ion-item [class.error]="services?.invalid && services?.touched">
+            <ion-label position="stacked">SERVICIOS:</ion-label>
+            <ion-select
+              formControlName="services"
+              multiple="true"
+              placeholder="Selecciona Servicios"
+              required
+            >
+              <ion-select-option
+                *ngFor="let servicio of servicios"
+                [value]="servicio.Name"
+                >{{ servicio.Name }}</ion-select-option
+              >
+            </ion-select>
+          </ion-item>
+        </ion-col>
+        <ion-footer class="ion-no-border button-container">
+          <!-- Botón para terminar registro/actualizacion -->
+          <ion-button
+            [disabled]="!tecnicosForm.valid"
+            type="submit"
+            shape="round"
+            >{{
+              tecnico ? "Actualizar Técnico" : "Registrar Técnico"
+            }}</ion-button
+          >
+        </ion-footer>
+      </ion-grid>
+    </form>
+  </ion-list>
+</ion-content>

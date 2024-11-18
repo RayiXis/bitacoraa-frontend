@@ -1,0 +1,747 @@
+<ion-content id="main-content" class="ion-padding">
+  <ion-text color="primary">
+    <h1>Catalogos</h1>
+  </ion-text>
+
+  <div class="table-container">
+    <div class="search-bar">
+      <ion-searchbar
+        show-clear-button="focus"
+        clear-icon="trash"
+        mode="ios"
+        animated="true"
+        placeholder="Buscar"
+        (ionInput)="filterSearchCatalogoItems($event)"
+      ></ion-searchbar>
+      <ion-button
+        *ngIf="
+          selectedSegment !== 'usuarios' &&
+          selectedSegment !== 'perifericos' &&
+          hasRole('Admin', 'Technical')
+        "
+        (click)="openModal()"
+        color="primary"
+        shape="round"
+      >
+        <ion-icon slot="start" name="desktop-outline"></ion-icon>
+        Dar de Alta
+      </ion-button>
+
+      <div class="butonsIcon">
+        <!--FILTRO-->
+        <ion-button
+          id="popover-catalogo-status"
+          size="default"
+          color="dark"
+          fill="clear"
+        >
+          <ion-icon
+            class="icons"
+            src="/assets/icon/traffic-light.svg"
+          ></ion-icon>
+        </ion-button>
+
+        <ion-button
+          (click)="exportExcelCatalogo()"
+          size="default"
+          color="dark"
+          fill="clear"
+        >
+          <ion-icon
+            size="icon-only"
+            class="icons"
+            src="/assets/icon/iconExcel.svg"
+          ></ion-icon>
+        </ion-button>
+        <ion-button
+          *ngIf="selectedSegment === 'equipos'"
+          (click)="importModal()"
+          size="default"
+          color="dark"
+          fill="clear"
+        >
+          <ion-icon
+            size="icon-only"
+            class="icons"
+            name="cloud-download"
+          ></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+    <!--POPOVER-->
+    <ion-popover trigger="popover-catalogo-status" dismissOnSelect="true">
+      <ng-template>
+        <ion-content>
+          <ion-list>
+            <ion-item
+              button
+              detail="false"
+              (click)="applyStatusFilter('active')"
+            >
+              <span>Activos</span>
+              <span slot="end" class="status-circle status-disponible"></span>
+            </ion-item>
+            <ion-item
+              button
+              detail="false"
+              (click)="applyStatusFilter('inactive')"
+            >
+              <span>No Activos</span>
+              <span slot="end" class="status-circle status-nodisponible"></span>
+            </ion-item>
+            <ion-item button detail="false" (click)="applyStatusFilter('all')">
+              <span>Todos</span>
+              <span slot="end" class="status-circle status-todos"></span>
+            </ion-item>
+          </ion-list>
+        </ion-content>
+      </ng-template>
+    </ion-popover>
+    <!--Pestañas-->
+    <ion-segment (ionChange)="segmentChanged($event)" value="usuarios">
+      <ion-segment-button value="usuarios">
+        <ion-label>Usuarios</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="equipos">
+        <ion-label>Computadoras</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="perifericos">
+        <ion-label>Periférico</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="accesorios">
+        <ion-label>Equipos a solicitar</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    <!--Tabla de usuarios-->
+    <ng-container *ngIf="selectedSegment === 'usuarios'">
+      <table id="usuarios-table" class="desktop-table">
+        <thead>
+          <tr>
+            <th>
+              Dependencia
+              <ion-icon
+                [name]="sortCatalogo[0]"
+                (click)="sortUserTable('secretariaName', 0)"
+              ></ion-icon>
+            </th>
+            <th>
+              Dirección
+              <ion-icon
+                [name]="sortCatalogo[1]"
+                (click)="sortUserTable('direccionName', 1)"
+              ></ion-icon>
+            </th>
+            <th>
+              Puesto
+              <ion-icon
+                [name]="sortCatalogo[2]"
+                (click)="sortUserTable('job', 2)"
+              ></ion-icon>
+            </th>
+            <th>Nombres</th>
+            <th>
+              Apellidos
+              <ion-icon
+                [name]="sortCatalogo[3]"
+                (click)="sortUserTable('lastname', 3)"
+              ></ion-icon>
+            </th>
+            <th>Telefono</th>
+            <th>
+              Rol
+              <ion-icon
+                [name]="sortCatalogo[4]"
+                (click)="sortUserTable('role', 4)"
+              ></ion-icon>
+            </th>
+            <th *ngIf="hasRole('Admin')">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of filteredUser">
+            <td>{{ user.secretariaName }}</td>
+            <td>{{ user.direccionName }}</td>
+            <td>{{ user.job }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.lastname }}</td>
+            <td>{{ user.phone }}</td>
+            <td>{{ user.role | roleesp }}</td>
+            <td *ngIf="hasRole('Admin')">
+              <ion-button
+                *ngIf="user.role !== 'Admin'"
+                color="primary"
+                (click)="givePermissions(user.userId)"
+              >
+                <ion-icon name="settings-outline"></ion-icon>
+              </ion-button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!--Tarjetas de usuarios para dispositivos móviles-->
+      <ng-container *ngFor="let user of filteredUser">
+        <ion-card class="mobile-cards">
+          <ion-card-header>
+            <ion-card-title>{{ user.name }} {{ user.lastname }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p><strong>Dependencia:</strong> {{ user.secretariaName }}</p>
+            <p><strong>Dirección:</strong> {{ user.direccionName }}</p>
+            <p><strong>Puesto:</strong> {{ user.job }}</p>
+            <p><strong>Correo:</strong> {{ user.email }}</p>
+            <p><strong>Teléfono:</strong> {{ user.phone }}</p>
+            <p><strong>Rol:</strong> {{ user.role | roleesp }}</p>
+
+            <ion-button
+              *ngIf="hasRole('Admin') && user.role !== 'Admin'"
+              color="primary"
+              (click)="givePermissions(user.userId)"
+            >
+              <ion-icon name="settings-outline"></ion-icon>
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ng-container>
+    </ng-container>
+    <!--Tabla de equipos-->
+    <ng-container *ngIf="selectedSegment === 'equipos'">
+      <table id="equipos-table" class="desktop-table">
+        <thead>
+          <tr>
+            <th>Número de Inventario</th>
+            <th>
+              Descripción
+              <ion-icon
+                [name]="sortCatalogo[5]"
+                (click)="sortEquipmentTable('description', 5)"
+              ></ion-icon>
+            </th>
+            <th>
+              IP Asignada
+              <ion-icon
+                [name]="sortCatalogo[6]"
+                (click)="sortEquipmentTable('assigned_ip', 6)"
+              ></ion-icon>
+            </th>
+            <th>Dirección Ethernet</th>
+            <th>Discos Duros</th>
+            <th>
+              Funcionario o empleado quien tiene asignado el bien
+              <ion-icon
+                [name]="sortCatalogo[7]"
+                (click)="sortEquipmentTable('userId', 7)"
+              ></ion-icon>
+            </th>
+            <th>
+              Ubicación-Resguardo
+              <ion-icon
+                [name]="sortCatalogo[8]"
+                (click)="sortEquipmentTable('address', 8)"
+              ></ion-icon>
+            </th>
+            <th>Disponible</th>
+            <th *ngIf="hasRole('Admin', 'Technical')">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let equipment of filteredEquipment; let i = index">
+            <td>{{ equipment.sindicatura_Inventory_Code }}</td>
+            <td>{{ equipment.description }}</td>
+            <td>{{ equipment.assigned_ip }}</td>
+            <td>{{ equipment.directionEthernet }}</td>
+            <td>{{ equipment.hdd }}</td>
+            <td>
+              {{ equipment.assignedUser?.name }}
+              {{ equipment.assignedUser?.lastname }}
+            </td>
+            <td>{{ equipment.location }}</td>
+            <td>
+              <div
+                (click)="openPhotosModal(equipment)"
+                [ngStyle]="{
+                  'background-color': equipment.state ? 'green' : 'red',
+                  'border-radius': '50%',
+                  width: '10px',
+                  height: '10px',
+                  display: 'inline-block'
+                }"
+              ></div>
+            </td>
+            <td>
+              <ion-button
+                *ngIf="equipment.state && hasRole('Admin', 'Technical')"
+                (click)="editarEquipo(equipment)"
+              >
+                <ion-icon name="pencil"></ion-icon>
+              </ion-button>
+              <ion-button
+                *ngIf="equipment.state && hasRole('Admin', 'Technical')"
+                (click)="deleteEquipment(equipment)"
+                color="danger"
+              >
+                <ion-icon name="trash-bin"></ion-icon>
+              </ion-button>
+              <!-- [disabled]="equipment.userId !== ''" -->
+              <ion-button
+                *ngIf="equipment.state && hasRole('Admin', 'Technical')"
+                color="warning"
+                (click)="assignDevice(equipment._id)"
+              >
+                <ion-icon name="people"></ion-icon>
+              </ion-button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!--Tarjetas de equipos para dispositivos móviles-->
+      <ng-container *ngFor="let equipment of filteredEquipment">
+        <ion-card class="mobile-cards">
+          <ion-card-header>
+            <ion-card-title>{{ equipment.description }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p>
+              <strong>Número de Inventario:</strong>
+              {{ equipment.sindicatura_Inventory_Code }}
+            </p>
+            <p><strong>IP Asignada:</strong> {{ equipment.assigned_ip }}</p>
+            <p>
+              <strong>Dirección Ethernet:</strong>
+              {{ equipment.directionEthernet }}
+            </p>
+            <p><strong>Discos Duros:</strong> {{ equipment.hdd }}</p>
+            <p>
+              <strong
+                >Funcionario o empleado quien tiene asignado el bien:</strong
+              >
+              {{ equipment.assignedUser?.name }}
+              {{ equipment.assignedUser?.lastname }}
+            </p>
+            <p>
+              <strong>Ubicación-Resguardo:</strong> {{ equipment.location }}
+            </p>
+            <p>
+              <strong
+                >Disponible:
+                <div
+                  [ngStyle]="{
+                    'background-color': equipment.state ? 'green' : 'red',
+                    'border-radius': '50%',
+                    width: '10px',
+                    height: '10px',
+                    display: 'inline-block'
+                  }"
+                ></div
+              ></strong>
+            </p>
+
+            <ion-button
+              *ngIf="equipment.state && hasRole('Admin', 'Technical')"
+              (click)="editarEquipo(equipment)"
+            >
+              <ion-icon name="pencil-outline"></ion-icon>
+            </ion-button>
+            <ion-button
+              *ngIf="equipment.state && hasRole('Admin', 'Technical')"
+              (click)="deleteEquipment(equipment)"
+              color="danger"
+            >
+              <ion-icon name="close-outline"></ion-icon>
+            </ion-button>
+            <ion-button
+              color="warning"
+              *ngIf="equipment.state && hasRole('Admin', 'Technical')"
+              (click)="assignDevice(equipment._id)"
+            >
+              <ion-icon name="attach-outline"></ion-icon>
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ng-container>
+    </ng-container>
+    <!--Tabla de perifericos-->
+    <ng-container *ngIf="selectedSegment === 'perifericos'">
+      <table id="perifericos-table" class="desktop-table">
+        <thead>
+          <tr>
+            <th>
+              Código de inventario
+              <ion-icon
+                [name]="sortCatalogo[9]"
+                (click)="sortPeripheralTable('inventoryCode', 9)"
+              ></ion-icon>
+            </th>
+            <th>Descripción</th>
+            <th>IP Asignada</th>
+            <th>
+              Tipo
+              <ion-icon
+                [name]="sortCatalogo[10]"
+                (click)="sortPeripheralTable('type', 10)"
+              ></ion-icon>
+            </th>
+            <th>
+              Funcionario o empleado quien tiene asignado el bien
+              <ion-icon
+                [name]="sortCatalogo[11]"
+                (click)="sortPeripheralTable('ownerName', 11)"
+              ></ion-icon>
+            </th>
+            <th>Ubicación física de resguardo</th>
+            <th>Estado</th>
+            <th *ngIf="hasRole('Admin', 'Technical')"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let peripheral of filteredPeripheral">
+            <td>{{ peripheral.inventoryCode }}</td>
+            <td>{{ peripheral.description }}</td>
+            <td>{{ peripheral.ip }}</td>
+            <td>{{ peripheral.type }}</td>
+            <td>{{ peripheral.ownerName }}</td>
+            <td>{{ peripheral.location }}</td>
+            <td>
+              <div
+                [ngStyle]="{
+                  'background-color': peripheral.state ? 'green' : 'red',
+                  'border-radius': '50%',
+                  width: '10px',
+                  height: '10px',
+                  display: 'inline-block'
+                }"
+              ></div>
+            </td>
+            <td>
+              <ion-button
+                *ngIf="peripheral.state && hasRole('Admin', 'Technical')"
+                (click)="editarPeriferico(peripheral)"
+              >
+                <ion-icon name="pencil-outline"></ion-icon>
+              </ion-button>
+              <ion-button
+                *ngIf="peripheral.state && hasRole('Admin', 'Technical')"
+                (click)="deletePeripheral(peripheral)"
+                color="danger"
+              >
+                <ion-icon name="trash-bin"></ion-icon>
+              </ion-button>
+              <ion-button
+                *ngIf="peripheral.state && hasRole('Admin', 'Technical')"
+                color="warning"
+                (click)="assignPeripheral(peripheral._id)"
+              >
+                <ion-icon name="people"></ion-icon>
+              </ion-button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!--Tarjetas de perifericos para dispositivos móviles-->
+      <ng-container *ngFor="let peripheral of filteredPeripheral">
+        <ion-card class="mobile-cards">
+          <ion-card-header>
+            <ion-card-title>{{ peripheral.description }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p>
+              <strong>Código de inventario:</strong>
+              {{ peripheral.inventoryCode }}
+            </p>
+            <p><strong>Descripción:</strong> {{ peripheral.description }}</p>
+            <p>
+              <strong>IP Asignada:</strong>
+              {{ peripheral.ip }}
+            </p>
+            <p><strong>Tipo:</strong> {{ peripheral.type }}</p>
+            <p>
+              <strong
+                >Funcionario o empleado quien tiene asignado el bien:</strong
+              >
+              {{ peripheral }}
+              {{ peripheral }}
+            </p>
+            <p>
+              <strong>Ubicación física de resguardo:</strong>
+              {{ peripheral.location }}
+            </p>
+            <p>
+              <strong
+                >Disponible:
+                <div
+                  [ngStyle]="{
+                    'background-color': peripheral.state ? 'green' : 'red',
+                    'border-radius': '50%',
+                    width: '10px',
+                    height: '10px',
+                    display: 'inline-block'
+                  }"
+                ></div
+              ></strong>
+            </p>
+
+            <ion-button
+              *ngIf="peripheral.state && hasRole('Admin', 'Technical')"
+              (click)="editarPeriferico(peripheral)"
+            >
+              <ion-icon name="pencil-outline"></ion-icon>
+            </ion-button>
+            <ion-button
+              *ngIf="peripheral.state && hasRole('Admin', 'Technical')"
+              (click)="deletePeripheral(peripheral)"
+              color="danger"
+            >
+              <ion-icon name="trash-bin"></ion-icon>
+            </ion-button>
+            <ion-button
+              *ngIf="peripheral.state && hasRole('Admin', 'Technical')"
+              color="warning"
+              (click)="assignPeripheral(peripheral._id)"
+            >
+              <ion-icon name="people"></ion-icon>
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ng-container>
+    </ng-container>
+    <!--Tabla de accesorios-->
+    <ng-container *ngIf="selectedSegment === 'accesorios'">
+      <table id="accesorios-table" class="desktop-table">
+        <thead>
+          <tr>
+            <th>
+              Descripción
+              <ion-icon
+                [name]="sortCatalogo[12]"
+                (click)="sortAccesoryTable('description', 12)"
+              ></ion-icon>
+            </th>
+            <th>Numero de inventario</th>
+            <th>Estado</th>
+            <th *ngIf="hasRole('Admin', 'Technical')"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let accesory of filteredAccesory">
+            <td>{{ accesory.description }}</td>
+            <td>{{ accesory.inventoryNumber }}</td>
+            <td>
+              <div
+                [ngStyle]="{
+                  'background-color': accesory.state ? 'green' : 'red',
+                  'border-radius': '50%',
+                  width: '10px',
+                  height: '10px',
+                  display: 'inline-block'
+                }"
+              ></div>
+            </td>
+            <td>
+              <ion-button
+                *ngIf="accesory.state && hasRole('Admin', 'Technical')"
+                (click)="editarAccesorio(accesory)"
+              >
+                <ion-icon name="pencil-outline"></ion-icon>
+              </ion-button>
+              <ion-button
+                *ngIf="accesory.state && hasRole('Admin', 'Technical')"
+                (click)="deleteAccesory(accesory)"
+                color="danger"
+              >
+                <ion-icon name="trash-bin"></ion-icon>
+              </ion-button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!--Tarjetas de accesorios para dispositivos móviles-->
+      <ng-container *ngFor="let accesory of filteredAccesory">
+        <ion-card class="mobile-cards">
+          <ion-card-header>
+            <ion-card-title>{{ accesory.description }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p>
+              <strong>Numero de inventario:</strong>
+              {{ accesory.inventoryNumber }}
+            </p>
+            <p><strong>Estado:</strong></p>
+            <p>
+              <strong
+                >Disponible:
+                <div
+                  [ngStyle]="{
+                    'background-color': accesory.state ? 'green' : 'red',
+                    'border-radius': '50%',
+                    width: '10px',
+                    height: '10px',
+                    display: 'inline-block'
+                  }"
+                ></div
+              ></strong>
+            </p>
+
+            <ion-button
+              *ngIf="accesory.state && hasRole('Admin', 'Technical')"
+              (click)="editarAccesorio(accesory)"
+            >
+              <ion-icon name="pencil-outline"></ion-icon>
+            </ion-button>
+            <ion-button
+              *ngIf="accesory.state && hasRole('Admin', 'Technical')"
+              (click)="deleteAccesory(accesory)"
+              color="danger"
+            >
+              <ion-icon name="trash-bin"></ion-icon>
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ng-container>
+    </ng-container>
+    <!--*====================================== Loading spinner ======================================*-->
+    <div class="spinner-container" *ngIf="isLoading">
+      <ion-spinner name="bubbles"></ion-spinner>
+    </div>
+    <!--*====================================== No catalogo found message ======================================*-->
+    <div class="noCatalogoData" *ngIf="noCatalogoData">
+      <ion-label mode="ios" class="label" color="danger">
+        <h2>Datos no encontrados!</h2>
+      </ion-label>
+    </div>
+    <!--*====================================== Pagination controls ======================================*-->
+    <div class="rowPage">
+      <p class="rows">
+        Filas por página:
+        <span id="btn-rows">
+          <ion-button fill="clear">
+            {{ getLimitData() }}
+            <ion-icon slot="end" name="caret-down-outline"></ion-icon>
+          </ion-button>
+          <ion-popover
+            trigger="btn-rows"
+            triggerAction="click"
+            dismissOnSelect="true"
+          >
+            <ng-template>
+              <ion-content>
+                <ion-list>
+                  <ion-item
+                    [button]="true"
+                    [detail]="false"
+                    (click)="changeRowsPerPage(5)"
+                    >5</ion-item
+                  >
+                  <ion-item
+                    [button]="true"
+                    [detail]="false"
+                    (click)="changeRowsPerPage(10)"
+                    >10</ion-item
+                  >
+                  <ion-item
+                    [button]="true"
+                    [detail]="false"
+                    (click)="changeRowsPerPage(15)"
+                    >15</ion-item
+                  >
+                  <ion-item
+                    [button]="true"
+                    [detail]="false"
+                    (click)="changeRowsPerPage(20)"
+                    >20</ion-item
+                  >
+                </ion-list>
+              </ion-content>
+            </ng-template>
+          </ion-popover>
+        </span>
+      </p>
+      <p class="pages" *ngIf="selectedSegment === 'usuarios'">
+        <span>Página {{ pageUsuarios }} de {{ lastPageUsuarios }}</span>
+        <span>
+          <ion-button
+            fill="clear"
+            size="small"
+            (click)="changePage(-1)"
+            [disabled]="pageUsuarios <= 1"
+          >
+            <ion-icon slot="icon-only" name="caret-back-outline"></ion-icon>
+          </ion-button>
+          <ion-button
+            fill="clear"
+            size="small"
+            (click)="changePage(1)"
+            [disabled]="pageUsuarios >= lastPageUsuarios"
+          >
+            <ion-icon slot="icon-only" name="caret-forward-outline"></ion-icon>
+          </ion-button>
+        </span>
+      </p>
+
+      <p class="pages" *ngIf="selectedSegment === 'equipos'">
+        <span>Página {{ pageEquipos }} de {{ lastPageEquipos }}</span>
+        <span>
+          <ion-button
+            fill="clear"
+            size="small"
+            (click)="changePage(-1)"
+            [disabled]="pageEquipos <= 1"
+          >
+            <ion-icon slot="icon-only" name="caret-back-outline"></ion-icon>
+          </ion-button>
+          <ion-button
+            fill="clear"
+            size="small"
+            (click)="changePage(1)"
+            [disabled]="pageEquipos >= lastPageEquipos"
+          >
+            <ion-icon slot="icon-only" name="caret-forward-outline"></ion-icon>
+          </ion-button>
+        </span>
+      </p>
+
+      <p class="pages" *ngIf="selectedSegment === 'perifericos'">
+        <span>Página {{ pagePeriferico }} de {{ lastPagePeriferico }}</span>
+        <span>
+          <ion-button
+            fill="clear"
+            size="small"
+            (click)="changePage(-1)"
+            [disabled]="pagePeriferico <= 1"
+          >
+            <ion-icon slot="icon-only" name="caret-back-outline"></ion-icon>
+          </ion-button>
+          <ion-button
+            fill="clear"
+            size="small"
+            (click)="changePage(1)"
+            [disabled]="pagePeriferico >= lastPagePeriferico"
+          >
+            <ion-icon slot="icon-only" name="caret-forward-outline"></ion-icon>
+          </ion-button>
+        </span>
+      </p>
+
+      <p class="pages" *ngIf="selectedSegment === 'accesorios'">
+        <span>Página {{ pageAccesorio }} de {{ lastPageAccesorio }}</span>
+        <span>
+          <ion-button
+            fill="clear"
+            size="small"
+            (click)="changePage(-1)"
+            [disabled]="pageAccesorio <= 1"
+          >
+            <ion-icon slot="icon-only" name="caret-back-outline"></ion-icon>
+          </ion-button>
+          <ion-button
+            fill="clear"
+            size="small"
+            (click)="changePage(1)"
+            [disabled]="pageAccesorio >= lastPageAccesorio"
+          >
+            <ion-icon slot="icon-only" name="caret-forward-outline"></ion-icon>
+          </ion-button>
+        </span>
+      </p>
+    </div>
+  </div>
+</ion-content>

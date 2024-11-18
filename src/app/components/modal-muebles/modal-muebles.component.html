@@ -1,0 +1,131 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>{{
+      mueble ? "Editar Bienes Muebles" : "Registrar Bienes Muebles"
+    }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="danger" (click)="closeMuebleFormAlert()">
+        <ion-icon name="close"></ion-icon>
+        Cancelar
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="muebleForm" (ngSubmit)="submit()">
+    <ion-list class="input-group">
+      <ion-item>
+        <ion-label position="stacked">Clave del Bien</ion-label>
+        <ion-input
+          formControlName="propertyKey"
+          type="text"
+          placeholder="Ej. 12345"
+        ></ion-input>
+        <!--Mensaje al poner dato no valido o vacio-->
+        <ion-text
+          color="danger"
+          *ngIf="
+            muebleForm.get('propertyKey')?.invalid &&
+            muebleForm.get('propertyKey')?.touched
+          "
+        >
+          La clave del bien es obligatorio
+        </ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Descripción y marca</ion-label>
+        <ion-input
+          formControlName="descriptionBrand"
+          placeholder="Ej. Ikea"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Serie</ion-label>
+        <ion-input
+          formControlName="serialNumber"
+          placeholder="Ej. 123458B"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Color</ion-label>
+        <ion-input formControlName="color" placeholder="Ej. Caqui"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Estado</ion-label>
+        <ion-select
+          formControlName="actualState"
+          placeholder="Selecciones el estado del mueble"
+        >
+          <ion-select-option value="Bueno">Bueno</ion-select-option>
+          <ion-select-option value="Regular">Regular</ion-select-option>
+          <ion-select-option value="Malo">Malo</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Número de Factura</ion-label>
+        <ion-input
+          formControlName="invoiceNumber"
+          placeholder="Ej. 198464"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Ubicación física de resguardo</ion-label>
+        <ion-input
+          formControlName="location"
+          placeholder="Ej. Palacio Municipal"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked"
+          >Observaciones
+          <span style="color: grey; font-size: 12px"
+            >(Opcional)</span
+          ></ion-label
+        >
+        <ion-input formControlName="observations"></ion-input>
+      </ion-item>
+      <!-- FOTOS -->
+      <ion-item class="contenedor-btn-file" (click)="inputImage()">
+        <label class="lblName" for="file">{{ txtDefault }}</label>
+        <!-- Input para cargar la imagen -->
+        <input
+          formControlName="photos"
+          #fileInput
+          id="file"
+          accept=".png, .jpg, jpeg"
+          multiple="true"
+          type="file"
+          (click)="onFileChange($event)"
+        />
+        <ion-icon slot="end" size="small" name="images-outline"></ion-icon>
+      </ion-item>
+      <!-- FOTOS DEL EQUIPO -->
+      <swiper-container
+        class="mySwiper"
+        pagination="true"
+        grab-cursor="true"
+        pagination-clickable="true"
+      >
+        <ng-container>
+          <swiper-slide *ngFor="let fotos of mueble?.photos">
+            <ion-col *ngIf="mueble.photos.length >= 1" size="12" sizeMd="4">
+              <ion-item>
+                <ion-img
+                  [src]="sindicaturaApi + '/img/MovableProperty/' + fotos"
+                  [alt]="fotos"
+                ></ion-img>
+              </ion-item>
+            </ion-col>
+          </swiper-slide>
+        </ng-container>
+      </swiper-container>
+    </ion-list>
+
+    <ion-footer class="ion-no-border button-container">
+      <ion-button type="submit" [disabled]="!muebleForm.valid" shape="round">{{
+        mueble ? "Actualizar Bienes Muebles" : "Registrar Bienes Muebles"
+      }}</ion-button>
+    </ion-footer>
+  </form>
+</ion-content>

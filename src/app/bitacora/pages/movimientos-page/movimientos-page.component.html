@@ -1,0 +1,353 @@
+<ion-content class="ion-padding">
+  <ion-text color="primary">
+    <h1>mis movimientos</h1>
+  </ion-text>
+
+  <div class="search-bar">
+    <!--*====================================== Search bar input ======================================*-->
+    <ion-searchbar
+      id="search"
+      #searchBar
+      [debounce]="50"
+      (ionInput)="searchInput($event)"
+      show-clear-button="focus"
+      clear-icon="trash"
+      mode="ios"
+      animated="true"
+      [placeholder]="getPlaceholder()"
+    ></ion-searchbar>
+
+    <div class="butonsIcon">
+      <ion-button
+        color="dark"
+        size="small"
+        id="modal-search-movimientos"
+        class="search"
+        fill="outline"
+        mode="ios"
+      >
+        <ion-icon name="search-circle-outline"></ion-icon>
+      </ion-button>
+
+      <!--*====================================== Modal for search ======================================*-->
+      <ion-modal
+        #modal
+        trigger="modal-search-movimientos"
+        [initialBreakpoint]="0.15"
+        [breakpoints]="[0, 0.25, 0.4]"
+        handleBehavior="cycle"
+      >
+        <ng-template>
+          <ion-content class="ion-padding">
+            <div class="ion-margin-top">
+              <ion-searchbar
+                (click)="modal.setCurrentBreakpoint(0.4)"
+                class="block"
+                [debounce]="50"
+                (ionInput)="searchInput($event)"
+                show-clear-button="focus"
+                clear-icon="trash"
+                mode="ios"
+                animated="true"
+                placeholder="Buscar por problema"
+              ></ion-searchbar>
+            </div>
+          </ion-content>
+        </ng-template>
+      </ion-modal>
+
+      <div class="button-with-badge" *ngIf="selectedSegment === 'tickets'">
+        <ion-button
+          size="small"
+          fill="outline"
+          mode="ios"
+          color="dark"
+          (click)="levantarTicketModal()"
+        >
+          +
+          <ion-icon name="receipt-outline"></ion-icon>
+        </ion-button>
+        <ion-badge class="badge">{{ filteredTickets.length }}</ion-badge>
+      </div>
+
+      <div
+        class="button-with-badge"
+        *ngIf="selectedSegment === 'solicitudes'"
+      >
+        <ion-button
+          size="small"
+          fill="outline"
+          mode="ios"
+          color="dark"
+          (click)="modalRequestEquipment()"
+        >
+          +
+          <ion-icon src="/assets/icon/iconProyector.svg"></ion-icon>
+        </ion-button>
+        <ion-badge class="badge">{{ filteredAgenda.length }}</ion-badge>
+      </div>
+
+      <ion-button
+        *ngIf="false"
+        color="dark"
+        size="small"
+        fill="outline"
+        id="popover-dateStar"
+        mode="ios"
+      >
+        <ion-icon
+          size="icon-only"
+          class="icons"
+          name="calendar-outline"
+        ></ion-icon>
+      </ion-button>
+
+      <ion-popover
+        mode="ios"
+        trigger="popover-dateStar"
+        [dismissOnSelect]="true"
+      >
+        <ng-template>
+          <ion-content>
+            <ion-list>
+              <ion-item (click)="openDatePicker(true)" button detail="false">
+                <ion-label>{{ dateStar }}</ion-label>
+                <ion-icon slot="end" name="calendar-number-outline"></ion-icon>
+              </ion-item>
+              <ion-item (click)="openDatePicker(false)" button detail="false">
+                <ion-label>{{ dateEnd }}</ion-label>
+                <ion-icon slot="end" name="calendar-number-outline"></ion-icon>
+              </ion-item>
+              <ion-item (click)="clearDateFilter()" button detail="false">
+                <ion-label>Borrar filtro</ion-label>
+                <ion-icon
+                  class="icons"
+                  color="danger"
+                  name="close-circle-outline"
+                ></ion-icon>
+              </ion-item>
+            </ion-list>
+          </ion-content>
+        </ng-template>
+      </ion-popover>
+    </div>
+  </div>
+
+  <!--*====================================== SEGMENTS ======================================*-->
+  <div class="segments">
+    <ion-segment (ionChange)="segmentChanged($event)" value="tickets">
+      <ion-segment-button value="tickets">
+        <ion-icon name="receipt-outline"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="solicitudes" *ngIf="canRequestDevices">
+        <ion-icon src="/assets/icon/iconProyector.svg"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="pdfs">
+        <ion-icon name="document-text-outline"></ion-icon>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <div class="content">
+    <!--*====================================== No tickets found message ======================================*-->
+    <div class="noTickets">
+      <div
+        *ngIf="selectedSegment === 'tickets' && filteredTickets.length === 0"
+      >
+        <ion-label mode="ios" class="label" color="danger">
+          <h2>Tickets no encontrados!</h2>
+        </ion-label>
+      </div>
+      <div
+        *ngIf="selectedSegment === 'solicitudes' && filteredAgenda.length === 0"
+      >
+        <ion-label mode="ios" class="label" color="danger">
+          <h2>Solicitudes no encontrados!</h2>
+        </ion-label>
+      </div>
+      <div *ngIf="selectedSegment === 'pdfs' && filteredPdfs.length === 0">
+        <ion-label mode="ios" class="label" color="danger">
+          <h2>Pdfs no encontrados!</h2>
+        </ion-label>
+      </div>
+    </div>
+
+    <ng-container *ngIf="selectedSegment === 'tickets'">
+      <div class="cards-container" *ngIf="!isLoading">
+        <ion-card
+          *ngFor="let ticket of filteredTickets; let i = index"
+          [ngClass]="{ 'even-card': i % 2 === 0, 'odd-card': i % 2 !== 0 }"
+        >
+          <ion-card-header>
+            <div class="card-header-content">
+              <ion-card-title>Fecha Creación</ion-card-title>
+              <ion-card-subtitle>{{
+                ticket.createdAt | date : "dd/MM/yyyy HH:mm"
+              }}</ion-card-subtitle>
+              <ion-label color="medium">No. Folio {{ ticket.folio }}</ion-label>
+            </div>
+            <div class="card-header-actions">
+              <span
+                class="status-circle"
+                [ngClass]="{
+                  'status-pendiente': ticket.status === 0,
+                  'status-proceso': ticket.status === 1,
+                  'status-completado': ticket.status === 2
+                }"
+              ></span>
+              <ion-button
+                [disabled]="!hasNotes(ticket)"
+                mode="ios"
+                fill="outline"
+                size="small"
+                (click)="chatModal(ticket)"
+              >
+                <ion-icon
+                  slot="icon-only"
+                  size="small"
+                  name="chatbubbles-outline"
+                ></ion-icon>
+              </ion-button>
+            </div>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-item>
+              <ion-label>Problema</ion-label>
+              <ion-note slot="end">{{ ticket.reportDetail }}</ion-note>
+            </ion-item>
+            <ion-item>
+              <ion-label>Técnico</ion-label>
+              <ion-note slot="end">{{ ticket.technicalName }}</ion-note>
+            </ion-item>
+            <ion-item>
+              <ion-label>Estatus</ion-label>
+              <ion-note slot="end">{{ ticket.status | ticketStatus }}</ion-note>
+            </ion-item>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="selectedSegment === 'solicitudes'">
+      <div class="cards-container" *ngIf="!isLoading">
+        <ion-card
+          *ngFor="let request of filteredAgenda; let i = index"
+          [ngClass]="{ 'even-card': i % 2 === 0, 'odd-card': i % 2 !== 0 }"
+        >
+          <ion-card-header>
+            <div class="card-header-content">
+              <ion-card-title>Fecha Creación</ion-card-title>
+              <ion-card-subtitle>{{
+                request.createdAt | date : "dd/MM/yyyy HH:mm"
+              }}</ion-card-subtitle>
+              <ion-label color="medium">{{ request.reason }}</ion-label>
+            </div>
+            <div class="card-header-actions">
+              <ion-button
+                mode="ios"
+                fill="outline"
+                size="small"
+                (click)="modalRequestEquipment(request)"
+              >
+                <ion-icon
+                  slot="icon-only"
+                  size="small"
+                  name="create-outline"
+                ></ion-icon>
+              </ion-button>
+            </div>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-item>
+              <ion-label>Equipo</ion-label>
+              <ion-note slot="end">{{ request.equipment }}</ion-note>
+            </ion-item>
+            <ion-item>
+              <ion-label>Horas de uso</ion-label>
+              <ion-note slot="end">{{ request.useHours }} horas</ion-note>
+            </ion-item>
+            <ion-item>
+              <ion-label>Lugar</ion-label>
+              <ion-note slot="end">{{ request.place }}</ion-note>
+            </ion-item>
+            <ion-item>
+              <ion-label>Fecha solicitada</ion-label>
+              <ion-note slot="end">{{
+                request.initDate | date : "dd/MM/yyyy HH:mm"
+              }}</ion-note>
+            </ion-item>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="selectedSegment === 'pdfs'">
+      <div class="select">
+        <ion-item>
+          <ion-select
+            mode="ios"
+            [interfaceOptions]="customAlertOptions"
+            interface="action-sheet"
+            placeholder="Altas"
+            (ionChange)="changeSelectedFilter($event)"
+          >
+            <ion-icon slot="start" name="clipboard-outline"></ion-icon>
+            <ion-select-option value="altas">Altas</ion-select-option>
+            <ion-select-option value="bajas">Bajas</ion-select-option>
+            <ion-select-option value="comodato">Comodato</ion-select-option>
+            <ion-select-option value="traspaso"
+              >Transferencias</ion-select-option
+            >
+            <ion-select-option value="actualizaciones"
+              >Actualizaciones</ion-select-option
+            >
+          </ion-select>
+        </ion-item>
+      </div>
+
+      <div class="cards-container" *ngIf="!isLoading">
+        <ion-card
+          *ngFor="let pdf of filteredPdfs; let i = index"
+          [ngClass]="{ 'even-card': i % 2 === 0, 'odd-card': i % 2 !== 0 }"
+        >
+          <ion-card-header>
+            <div class="card-header-content">
+              <ion-card-title>Fecha Creación</ion-card-title>
+              <ion-card-subtitle>{{
+                pdf.createdAt | date : "dd/MM/yyyy HH:mm"
+              }}</ion-card-subtitle>
+            </div>
+            <div class="card-header-actions">
+              <ion-button
+                mode="ios"
+                fill="outline"
+                size="small"
+                (click)="showPdf(pdf.folio, pdf.tipoPdf)"
+              >
+                <ion-icon slot="icon-only" size="small" name="eye"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-item>
+              <ion-label>Redactado por:</ion-label>
+              <ion-note slot="end">{{ pdf.responsibleName }}</ion-note>
+            </ion-item>
+            <ion-item>
+              <ion-label>Texto</ion-label>
+              <ion-note slot="end">{{ pdf.freeText }}</ion-note>
+            </ion-item>
+            <ion-item>
+              <ion-label>Con copia para:</ion-label>
+              <ion-note slot="end">{{ pdf.ccp }}</ion-note>
+            </ion-item>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </ng-container>
+
+    <div class="spinner-container" *ngIf="isLoading">
+      <ion-spinner name="bubbles"></ion-spinner>
+    </div>
+  </div>
+</ion-content>

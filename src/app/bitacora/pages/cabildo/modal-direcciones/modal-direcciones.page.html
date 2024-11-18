@@ -1,0 +1,24 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-back-button
+      slot="start"
+      style="display: block"
+      (click)="modalController.dismiss()"
+    ></ion-back-button>
+    <ion-title>{{ name }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div style="display: flex; flex-wrap: wrap;">
+    <ion-card color="primary" *ngFor="let direccion of direcciones">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-item color="primary">
+            <ion-label>{{ direccion.name }}</ion-label>
+          </ion-item>
+        </ion-card-title>
+      </ion-card-header>
+    </ion-card>
+  </div>
+</ion-content>

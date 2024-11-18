@@ -1,0 +1,73 @@
+<ion-content>
+  <div class="chat">
+    <div>
+      <ion-header>
+        <ion-breadcrumbs color="medium">
+          <ion-breadcrumb>
+            <ion-icon slot="start" name="chatbubbles"></ion-icon>
+            Chat
+          </ion-breadcrumb>
+          <ion-breadcrumb>
+            <ion-icon slot="start" name="receipt"></ion-icon>
+            {{ dataTicket.folio }}
+          </ion-breadcrumb>
+          <ion-breadcrumb>
+            <ion-icon slot="start" name="megaphone"></ion-icon>
+            <ng-container *ngIf="user === 'tech'; else empleadoLogueado">
+              {{ empleado!.name }} {{ empleado!.lastname }}
+            </ng-container>
+            <!-- Si el empleado está logueado, muestra el nombre del técnico -->
+            <ng-template #empleadoLogueado>
+              {{ tecnico!.name }} {{ tecnico!.lastname }}
+            </ng-template>
+          </ion-breadcrumb>
+        </ion-breadcrumbs>
+      </ion-header>
+    </div>
+
+    <!-- Mostrar los mensajes del chat -->
+    <div class="chat__messages" #messageContainer>
+      <div *ngFor="let mensaje of mensajes">
+        <div
+          class="message"
+          [ngClass]="{
+            'tech-message': mensaje.user === 'tech',
+            'user-message': mensaje.user === 'user',
+            'my-message': mensaje.senderId === currentUser.userId
+          }"
+        >
+          <ion-avatar>
+            <img src="assets/img/userAvatar.png" alt="avatar" />
+          </ion-avatar>
+          <div class="message__info">
+            <h4>
+              <span
+                [ngClass]="{
+                  'tech-name': mensaje.user === 'tech',
+                  'user-name': mensaje.user === 'user'
+                }"
+              >
+                {{ mensaje.user === "tech" ? tecnico!.name : empleado!.name }}
+              </span>
+              <span class="message__timestamp">{{ mensaje.hora }}</span>
+            </h4>
+            <p>{{ mensaje.mensaje }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat__input" *ngIf="dataTicket.status !== 2">
+      <ion-input
+        class="sendMessage"
+        placeholder="Mandar mensaje..."
+        [(ngModel)]="newMessage"
+        name="message"
+        type="text"
+      ></ion-input>
+      <ion-button fill="clear" (click)="sendMessage()">
+        <ion-icon name="send"></ion-icon>
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

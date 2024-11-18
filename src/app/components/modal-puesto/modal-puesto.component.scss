@@ -1,0 +1,27 @@
+ion-content.modalPuesto-content {
+  height: 100vh;
+  display: grid;
+  place-items: center;
+
+  .center-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+
+  .modalPuesto-box{
+    width: 300px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .modal-title{
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 25px;
+    font-weight: 900;
+    font-style: italic;
+  }
+}

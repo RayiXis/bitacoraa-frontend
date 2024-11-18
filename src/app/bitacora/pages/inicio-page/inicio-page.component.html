@@ -1,0 +1,192 @@
+<ion-content class="ion-padding">
+  <section class="body">
+    <div class="miEquipo">
+      <div class="accionesUsuario">
+        <div class="btns">
+          <ion-button
+            class="btnMd"
+            mode="md"
+            (click)="logout()"
+            fill="solid"
+            color="danger"
+          >
+            CERRAR SESIÓN
+            <ion-icon slot="end" name="log-out-outline"></ion-icon>
+          </ion-button>
+
+          <ion-button
+            class="btnMd"
+            mode="md"
+            (click)="userPage()"
+            fill="solid"
+            color="primary"
+          >
+            mis datos
+            <ion-icon slot="end" name="person-outline"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+      <div>
+        <div class="title">
+          <h2>Mi equipo</h2>
+          <p>Especificaciones</p>
+        </div>
+        <div class="specs">
+          <div *ngIf="equipos && equipos.length > 0">
+            <div class="pc" id="popover-button-device">
+              <ion-icon name="chevron-down-outline"></ion-icon>
+              <p>
+                {{ selectedEquipo?.sindicatura_Inventory_Code }}
+                <em>{{ selectedEquipo?.description }}</em>
+              </p>
+
+              <!--================*  POPOVER PARA CAMBIAR EQUIPO  *================-->
+              <ion-popover
+                trigger="popover-button-device"
+                dismissOnSelect="true"
+              >
+                <ng-template>
+                  <ion-content>
+                    <ion-list
+                      *ngFor="let equipo of equipos"
+                      (click)="selectEquipo(equipo)"
+                    >
+                      <ion-item button detail="false">
+                        <span>{{ equipo.description }}</span>
+                        <ion-icon slot="end" name="laptop-outline"></ion-icon>
+                      </ion-item>
+                    </ion-list>
+                  </ion-content>
+                </ng-template>
+              </ion-popover>
+            </div>
+
+            <p>Descripción:</p>
+            <p>
+              <span>{{ selectedEquipo?.description }}</span>
+            </p>
+            <p>
+              IP del equipo: <span>{{ selectedEquipo?.assigned_ip }}</span>
+            </p>
+          </div>
+
+          <ion-label color="danger" *ngIf="equipos?.length === 0">
+            <h2>¡ No cuenta con ningún equipo. !</h2>
+            <p>Solicitar ayuda de un técnico para el registro de una.</p>
+          </ion-label>
+        </div>
+      </div>
+
+      <div class="accionesEquipo" *ngIf="false"> 
+        <div class="titleEquipo">
+          <h3>acciones equipo</h3>
+          <ion-icon src="/assets/icon/iconEstacionTrabajo.svg"></ion-icon>
+        </div>
+
+        <div class="btns">
+          <ion-button
+            (click)="openAlta()"
+            class="btnMd"
+            mode="md"
+            fill="outline"
+            color="success"
+          >
+            AGREGAR
+            <ion-icon slot="end" name="laptop-outline"></ion-icon>
+          </ion-button>
+          <ion-button
+            (click)="openBaja()"
+            class="btnMd"
+            mode="md"
+            fill="outline"
+            color="danger"
+          >
+            DAR DE BAJA
+            <ion-icon slot="end" name="trash-bin-outline"></ion-icon>
+          </ion-button>
+          <ion-button
+            *ngIf="user?.canRequestDevices"
+            (click)="solicitarEquipo()"
+            class="btnMd"
+            mode="md"
+            fill="outline"
+            color="medium"
+          >
+            SOLICITAR EQUIPO
+            <ion-icon
+              slot="end"
+              src="/assets/icon/iconProyector.svg"
+            ></ion-icon>
+          </ion-button>
+          <ion-button
+            *ngIf="hasRole('Admin', 'Technical')"
+            (click)="openABTActualizacion()"
+            class="btnMd"
+            mode="md"
+            fill="outline"
+            color="dark"
+          >
+            ACTUALIZAR
+            <ion-icon name="arrow-up-outline"></ion-icon>
+          </ion-button>
+          <ion-button
+            *ngIf="abt === 'T' || abt === 'P'"
+            (click)="openTraspaso()"
+            class="btnMd"
+            mode="md"
+            fill="outline"
+            color="primary"
+          >
+            TRASPASO
+            <ion-icon slot="end" name="share-social-outline"></ion-icon>
+          </ion-button>
+          <ion-button
+            *ngIf="abt === 'T' || abt === 'P'"
+            (click)="openComodato()"
+            class="btnMd"
+            mode="md"
+            fill="outline"
+            color="warning"
+          >
+            COMODATO
+            <ion-icon name="swap-horizontal-outline"></ion-icon>
+          </ion-button>
+          <ion-button
+            *ngIf="canSeeRegresarComodatoButton"
+            (click)="openRegresarComodato()"
+            class="btnMd"
+            mode="md"
+            fill="outline"
+            color="warning"
+          >
+            REGRESAR COMODATO
+            <ion-icon name="return-down-back-outline"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="servicios">
+
+      <div class="image">
+        <ion-avatar>
+          <img src="assets/img/userAvatar.png" />
+        </ion-avatar>
+      </div>
+
+      <ion-item lines="none" class="profile">
+        <ion-label class="ion-text-center">
+          <ion-text>{{user.name}} {{user.lastname}}</ion-text>
+          <p>
+            <ion-text>{{user.job}}</ion-text>
+          </p>
+        </ion-label>
+      </ion-item>
+
+      <ion-card class="options">
+
+      </ion-card>
+
+    </div> -->
+  </section>
+</ion-content>

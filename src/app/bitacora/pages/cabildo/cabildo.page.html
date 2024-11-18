@@ -1,0 +1,22 @@
+<ion-content>
+    <div class="cabildo-cards">
+      <ion-card *ngFor="let cabildo of cabildos" color="primary">
+        <ion-card-header>
+          <ion-card-title>
+            <ion-item color="primary">
+              <ion-label>{{ cabildo.name }}</ion-label>
+              <ion-buttons
+                *ngIf="cabildo.secretarias.length > 0 || cabildo.direcciones.length > 0 || cabildo.organismos.length > 0 || cabildo.paramunicipales.length > 0"
+                slot="end"
+                (click)="openModal(cabildo)"
+              >
+                <ion-button>
+                  <ion-icon slot="icon-only" name="chevron-forward"></ion-icon>
+                </ion-button>
+              </ion-buttons>
+            </ion-item>
+          </ion-card-title>
+        </ion-card-header>
+      </ion-card>
+    </div>
+</ion-content>

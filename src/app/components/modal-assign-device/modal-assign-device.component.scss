@@ -1,0 +1,80 @@
+ion-content {
+  display: flex;
+  flex-direction: column;
+  --overflow: auto; /* Permitir el desplazamiento */
+  max-height: calc(
+    100vh - 200px
+  ); /* Ajustar la altura máxima según sea necesario */
+}
+.input-group {
+  ion-item {
+    width: calc(100% - 40px);
+    margin: 10px 20px;
+  }
+
+  ion-label {
+    font-size: 20px;
+  }
+
+  ion-input {
+    --padding-start: 8px;
+    --padding-end: 8px;
+  }
+}
+
+.contenedor-btn-file {
+  cursor: pointer;
+  width: 100%;
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+
+  input[type="file"] {
+    display: none;
+  }
+
+  .lblName {
+    cursor: pointer;
+    font-size: 12px;
+  }
+}
+
+ion-footer.button-container {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  height: auto;
+}
+
+ion-button {
+  max-width: 200px;
+}
+
+.btnModalUser {
+  margin-top: 10px;
+}
+
+ion-label {
+  text-transform: capitalize;
+}
+
+.user-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 15px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  position: relative;
+}

@@ -1,0 +1,121 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>{{
+      vehiculo ? "Editar Vehículo" : "Registrar Vehículo"
+    }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="danger" (click)="closeVehicleFormAlert()"
+        ><ion-icon name="close"></ion-icon>Cancelar</ion-button
+      >
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<!--TODO: Que numero de unidad y clave del bien sean los unicos obligatorios-->
+<ion-content>
+  <form [formGroup]="vehicleForm" (ngSubmit)="submit()">
+    <ion-list class="input-group">
+      <ion-item>
+        <ion-label position="stacked">Número de Unidad</ion-label>
+        <ion-input
+          formControlName="unitNumber"
+          type="text"
+          placeholder="Ej. 12345"
+        ></ion-input>
+        <!--Mensaje al poner dato no valido o vacio-->
+        <ion-text
+          color="danger"
+          *ngIf="
+            vehicleForm.get('unitNumber')?.invalid &&
+            vehicleForm.get('unitNumber')?.touched
+          "
+        >
+          El número de unidad del vehiculo es obligatorio
+        </ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Marca</ion-label>
+        <ion-input formControlName="brand" placeholder="Ej. Toyota"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Tipo de carrocería</ion-label>
+        <ion-input formControlName="class" placeholder="Ej. Sedán"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Modelo</ion-label>
+        <ion-input formControlName="model" placeholder="Ej. 2022"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Placas</ion-label>
+        <ion-input
+          formControlName="licensePlates"
+          placeholder="Ej. ABC-123"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Color</ion-label>
+        <ion-input formControlName="color" placeholder="Ej. Gris"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Número de Serie</ion-label>
+        <ion-input
+          formControlName="serialNumber"
+          placeholder="Ej. 1234567890"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Ubicación física de resguardo</ion-label>
+        <ion-input
+          formControlName="location"
+          placeholder="Ej. Palacio Municipal"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked"
+          >Observaciones
+          <span style="color: grey; font-size: 12px">(Opcional)</span>
+        </ion-label>
+        <ion-input formControlName="observations"></ion-input>
+      </ion-item>
+      <!-- FOTOS -->
+      <ion-item class="contenedor-btn-file" (click)="inputImage()">
+        <label class="lblName" for="file">{{ txtDefault }}</label>
+        <!-- Input para cargar la imagen -->
+        <input
+          formControlName="photos"
+          #fileInput
+          id="file"
+          accept=".png, .jpg, jpeg"
+          multiple="true"
+          type="file"
+          (click)="onFileChange($event)"
+        />
+        <ion-icon slot="end" size="small" name="images-outline"></ion-icon>
+      </ion-item>
+      <!-- FOTOS DEL EQUIPO -->
+      <swiper-container
+        class="mySwiper"
+        pagination="true"
+        grab-cursor="true"
+        pagination-clickable="true"
+      >
+        <ng-container>
+          <swiper-slide *ngFor="let fotos of vehiculo?.photos">
+            <ion-col *ngIf="vehiculo.photos.length >= 1" size="12" sizeMd="4">
+              <ion-item>
+                <ion-img
+                  [src]="sindicaturaApi + '/img/Car/' + fotos"
+                  [alt]="fotos"
+                ></ion-img>
+              </ion-item>
+            </ion-col>
+          </swiper-slide>
+        </ng-container>
+      </swiper-container>
+    </ion-list>
+    <ion-footer class="ion-no-border button-container">
+      <ion-button type="submit" [disabled]="!vehicleForm.valid" shape="round">{{
+        vehiculo ? "Actualizar Vehículo" : "Registrar Vehículo"
+      }}</ion-button>
+    </ion-footer>
+  </form>
+</ion-content>

@@ -1,0 +1,87 @@
+.chat {
+  display: flex;
+  flex-direction: column;
+  background-color: #353a3f;
+  height: 100vh;
+  flex: 1;
+}
+
+img {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  margin-top: 10px;
+}
+
+.chat__messages {
+  flex: 1;
+  padding-bottom: 80px; /* Espacio para que el input no tape los últimos mensajes */
+  background-color: #353a3f; /* Color consistente en el fondo */
+}
+
+
+.message {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  color: #fff;
+}
+
+.message__info {
+  margin-left: 20px;
+}
+
+.message__timestamp {
+  color: grey;
+  margin-left: 20px;
+  font-size: x-small;
+}
+
+.message__info > p {
+  width: 300px;
+  word-wrap: break-word;
+}
+
+.chat__input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #474b53;
+  color: lightgray;
+  width: calc(100% - 40px);
+  bottom: 0;
+  position: fixed;
+  left: 0;
+  margin: 20px 20px 5px 10px;
+  border-radius: 10px;
+}
+
+.tech-name {
+  color: var(--ion-color-primary-shade);
+}
+
+.user-name {
+  color: var(--ion-color-success);
+}
+
+.chat__input > form {
+  flex: 1;
+}
+
+.chat__input > form > input {
+  padding: 5px;
+  background-color: transparent;
+  border: none;
+  outline-width: 0;
+  color: #fff;
+  width: 100%;
+}
+
+.chat__inputButton {
+  display: none;
+}
+
+.chat__inputIcons > i {
+  margin-left: 10px;
+}

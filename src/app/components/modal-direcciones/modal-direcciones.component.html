@@ -1,0 +1,61 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>{{
+      direccion
+        ? "Editar Unidad Administrativa"
+        : "Registrar Unidad Administrativa"
+    }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="danger" (click)="closeDirectionFormAlert()">
+        <ion-icon name="close"></ion-icon>Cancelar
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="direccionForm">
+    <ion-list class="input-group">
+      <ion-item>
+        <ion-label position="stacked">Nombre de la Dirección</ion-label>
+        <ion-input formControlName="name"></ion-input>
+        <!--Mensaje al poner dato no valido o vacio-->
+        <ion-text
+          color="danger"
+          *ngIf="
+            direccionForm.get('name')?.invalid &&
+            direccionForm.get('name')?.touched
+          "
+        >
+          El nombre de la unidad administrativa es obligatorio
+        </ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Código</ion-label>
+        <ion-input formControlName="code"></ion-input>
+        <!--Mensaje al poner dato no valido o vacio-->
+        <ion-text
+          color="danger"
+          *ngIf="
+            direccionForm.get('code')?.invalid &&
+            direccionForm.get('code')?.touched
+          "
+        >
+          El código de la unidad administrativa es obligatorio
+        </ion-text>
+      </ion-item>
+    </ion-list>
+  </form>
+  <ion-footer class="ion-no-border button-container">
+    <ion-button
+      shape="round"
+      (click)="save()"
+      [disabled]="!direccionForm.valid"
+      >{{
+        direccion
+          ? "Actualizar Unidad Administrativa"
+          : "Registrar Unidad Administrativa"
+      }}</ion-button
+    >
+  </ion-footer>
+</ion-content>

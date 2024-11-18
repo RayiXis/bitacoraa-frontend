@@ -1,0 +1,62 @@
+h3 {
+  margin-top: 0;
+  color: #92949c;
+  text-transform: uppercase;
+  font-weight: bolder;
+}
+
+ion-item {
+  border-bottom: 1px solid #5260ff;
+}
+
+.contenedor-btn-file {
+  cursor: pointer;
+  width: 100%;
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+
+  input[type="file"] {
+    display: none;
+  }
+
+  .lblName {
+    cursor: pointer;
+    font-size: 12px;
+  }
+}
+
+button {
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+  color: white;
+  text-transform: capitalize;
+  padding: 10px 30px;
+  margin: 20px 10px;
+  border-radius: 10px;
+  transition: background-color 0.3s;
+}
+
+.btnCancelar {
+  background-color: #eb445a;
+  border: 1px solid #eb445a;
+
+  &:hover {
+    color: #eb445a;
+    background-color: white;
+  }
+}
+
+.btnAceptar {
+  background-color: #3880ff;
+  border: 1px solid #3880ff;
+
+  &:hover {
+    color: #3880ff;
+    background-color: white;
+  }
+}
+
+ion-texarea {
+  font-size: 5px;
+}

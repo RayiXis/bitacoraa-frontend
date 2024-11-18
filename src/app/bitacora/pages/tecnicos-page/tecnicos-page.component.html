@@ -1,0 +1,98 @@
+<ion-header class="ion-padding ion-no-border" sticky>
+  <ion-text color="primary">
+    <h1>Técnicos</h1>
+  </ion-text>
+  <ion-toolbar>
+    <ion-searchbar
+      show-clear-button="focus"
+      clear-icon="trash"
+      mode="ios"
+      animated="true"
+      placeholder="Buscar"
+      (ionInput)="filterSearchTechItems($event)"
+    ></ion-searchbar>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-buttons slot="primary">
+      <!--FILTRO-->
+      <ion-button
+        *ngIf="hasRole('Admin')"
+        id="popover-tech-status"
+        color="primary"
+        shape="round"
+      >
+        Filtrar
+        <ion-icon slot="start" name="filter"></ion-icon>
+      </ion-button>
+      <!-- Botón para ir a la página de invitaciones -->
+      <ion-button
+        *ngIf="hasRole('Admin', 'Technical')"
+        href="bitacora/invite"
+        color="primary"
+        shape="round"
+      >
+        <ion-icon name="mail-outline" slot="start"></ion-icon>
+        Invitar
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="tecnicos-content" fullscreen>
+  <!--POPOVER-->
+  <ion-popover trigger="popover-tech-status" dismissOnSelect="true">
+    <ng-template>
+      <ion-content>
+        <ion-list>
+          <ion-item button detail="false" (click)="applyStatusFilter('active')">
+            <span>Activos</span>
+            <span slot="end" class="status-circle status-disponible"></span>
+          </ion-item>
+          <ion-item
+            button
+            detail="false"
+            (click)="applyStatusFilter('inactive')"
+          >
+            <span>No Activos</span>
+            <span slot="end" class="status-circle status-nodisponible"></span>
+          </ion-item>
+          <ion-item button detail="false" (click)="applyStatusFilter('all')">
+            <span>Todos</span>
+            <span slot="end" class="status-circle status-todos"></span>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-popover>
+
+  <!--*====================================== Loading spinner ======================================*-->
+  <div class="spinner-container" *ngIf="isLoading">
+    <ion-spinner name="bubbles"></ion-spinner>
+  </div>
+  <!--*====================================== No Tech found message ======================================*-->
+  <div class="noTechnicalData" *ngIf="noTechnicalData">
+    <ion-label mode="ios" class="label" color="danger">
+      <h2>Técnicos no encontrados!</h2>
+    </ion-label>
+  </div>
+  <ion-card *ngFor="let tecnico of tecnicosFiltrados; let i = index">
+    <ion-card-header>
+      <ion-card-title>{{ tecnico.name }} {{ tecnico.lastname }}</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content class="email-content">
+      <p><strong>Estación de trabajo:</strong> {{ tecnico.job || "N/A" }}</p>
+      <p><strong>Email:</strong> {{ tecnico.email || "N/A" }}</p>
+      <p><strong>Número celular:</strong> {{ tecnico.phone || "N/A" }}</p>
+
+      <ion-button
+        color="danger"
+        *ngIf="hasRole('Admin') && tecnico.status === 0"
+        (click)="presentAlertConfirm(i)"
+      >
+        <ion-icon slot="icon-only" name="trash"></ion-icon>
+        <span>Eliminar</span>
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

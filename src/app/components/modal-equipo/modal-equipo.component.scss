@@ -1,0 +1,69 @@
+.input-group {
+  ion-item {
+    width: calc(100% - 40px);
+    margin: 10px 20px;
+  }
+
+  ion-label {
+    font-size: 20px;
+  }
+
+  ion-input {
+    --padding-start: 8px;
+    --padding-end: 8px;
+  }
+}
+
+.contenedor-btn-file {
+  cursor: pointer;
+  // width: 100%;
+  display: flex;
+  // position: relative;
+  // overflow: hidden;
+  // border-radius: 8px;
+  align-items: center;
+
+  // input[type="file"] {
+  //   display: none;
+  // }
+
+  // .lblName {
+  //   cursor: pointer;
+  //   font-size: 12px;
+  // }
+}
+.contenedor-btn-file ion-icon {
+  margin-left: auto;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.contenedor-btn-file .lblName {
+  cursor: pointer;
+  flex: 1;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+ion-footer.button-container {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+}
+
+ion-button {
+  max-width: 200px;
+}
+/* Ocultar el texto en dispositivos pequeños */
+@media (max-width: 576px) {
+  .alta-periferico .text {
+    display: none;
+  }
+
+  .alta-periferico {
+    padding: 0;
+    min-width: 44px; /* Asegura que el botón siga siendo clickeable */
+  }
+}

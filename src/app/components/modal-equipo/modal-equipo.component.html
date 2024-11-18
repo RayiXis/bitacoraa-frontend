@@ -1,0 +1,173 @@
+<ion-header class="ion-no-border" mode="md">
+  <ion-toolbar>
+    <ion-title>{{
+      equipment ? "EDITAR EQUIPO" : "REGISTRAR EQUIPO"
+    }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button
+        *ngIf="!equipment"
+        (click)="openPerifericosModal()"
+        color="secondary"
+        shape="round"
+        class="alta-periferico"
+      >
+        <ion-icon size="large" name="add-circle-outline"></ion-icon>
+        <span class="text">Dar de Alta Periférico</span>
+      </ion-button>
+      <ion-button color="danger" (click)="closeEquipmentFormAlert()"
+        ><ion-icon name="close"></ion-icon>Cancelar</ion-button
+      >
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="modalequipoForm" (ngSubmit)="submit()">
+    <ion-list class="input-group">
+      <!--DESCRIPCION-->
+      <ion-item>
+        <ion-label position="stacked"
+          >DESCRIPCION DEL EQUIPO:
+          <ion-note color="danger">(Obligatorio)</ion-note></ion-label
+        >
+        <ion-input
+          formControlName="description"
+          type="text"
+          placeholder="Computadora DELL i5, 16 gb ram..."
+        ></ion-input>
+      </ion-item>
+      <!--Mensaje al poner dato no valido o vacio-->
+      <ion-text
+        color="danger"
+        *ngIf="
+          modalequipoForm.get('description')?.invalid &&
+          modalequipoForm.get('description')?.touched
+        "
+      >
+        La descripcion es obligatoria
+      </ion-text>
+      <!--TIPO-->
+      <ion-item>
+        <ion-label position="stacked">TIPO:</ion-label>
+        <ion-input
+          formControlName="type"
+          type="text"
+          placeholder="Computadora, impresora, regulador, telefono, etc."
+        ></ion-input>
+      </ion-item>
+      <!--Codigo de inventariado de sindicatura-->
+      <ion-item>
+        <ion-label position="stacked">CÓDIGO DE INVENTARIO:</ion-label>
+        <ion-input
+          formControlName="sindicatura_Inventory_Code"
+          type="text"
+          placeholder=""
+        ></ion-input>
+      </ion-item>
+      <!--IP-->
+      <ion-item>
+        <ion-label position="stacked">DIRECCIÓN IP:</ion-label>
+        <ion-input
+          formControlName="assigned_ip"
+          type="text"
+          placeholder="192.168.0.99"
+        ></ion-input>
+        <!-- MENSAJE DE ERROR SI NO ES UNA IP -->
+        <p
+          *ngIf="
+            modalequipoForm.get('assigned_ip')?.invalid &&
+            modalequipoForm.get('assigned_ip')?.touched
+          "
+        >
+          <ion-note
+            color="danger"
+            *ngIf="modalequipoForm.get('assigned_ip')?.errors?.['pattern']"
+          >
+            <ion-icon name="alert-circle" color="danger"></ion-icon>
+            Solo se aceptan dirección IPs
+          </ion-note>
+        </p>
+      </ion-item>
+      <!--DIRECCION ETHERNET-->
+      <ion-item>
+        <ion-label position="stacked">DIRECCIÓN FÍSICA ETHERNET:</ion-label>
+        <ion-input
+          formControlName="directionEthernet"
+          type="text"
+          placeholder="18-66-DA-08-C6-C1"
+        ></ion-input>
+      </ion-item>
+      <!--HDD-->
+      <ion-item>
+        <ion-label position="stacked">DISCOS DUROS:</ion-label>
+        <ion-input
+          formControlName="hdd"
+          type="text"
+          placeholder="MB1000GDUNU, XPG GA S70..."
+        ></ion-input>
+      </ion-item>
+      <!-- FOTOS -->
+      <ion-item class="contenedor-btn-file" (click)="inputImage()">
+        <label class="lblName" for="file"
+          >{{ txtDefault }}
+          <ion-note color="danger">(Obligatorio)</ion-note></label
+        >
+        <!-- Input para cargar la imagen -->
+        <input
+          formControlName="photos"
+          #fileInput
+          id="file"
+          accept=".png, .jpg, jpeg"
+          multiple="true"
+          type="file"
+          (click)="$event.stopPropagation()"
+        />
+        <ion-icon slot="end" size="small" name="images-outline"></ion-icon>
+      </ion-item>
+      <ion-text
+        color="danger"
+        *ngIf="
+          modalequipoForm.get('photos')?.invalid &&
+          modalequipoForm.get('photos')?.touched
+        "
+      >
+        Las fotos son obligatorias
+      </ion-text>
+      <!-- <ion-item *ngIf="equipment.photos.length >= 1">
+        <ion-img
+          [src]="bitacoraApi + '/img/equipment/' + equipment.photos"
+          [alt]="equipment.photos"
+        ></ion-img>
+      </ion-item> -->
+      <!-- FOTOS DEL EQUIPO -->
+      <swiper-container
+        class="mySwiper"
+        pagination="true"
+        grab-cursor="true"
+        pagination-clickable="true"
+      >
+        <ng-container>
+          <swiper-slide *ngFor="let fotos of equipment?.photos">
+            <ion-col *ngIf="equipment.photos.length >= 1" size="12" sizeMd="4">
+              <ion-item>
+                <ion-img
+                  [src]="bitacoraApi + '/img/equipment/' + fotos"
+                  [alt]="fotos"
+                ></ion-img>
+              </ion-item>
+            </ion-col>
+          </swiper-slide>
+        </ng-container>
+      </swiper-container>
+    </ion-list>
+    <ion-footer class="ion-no-border button-container">
+      <!--Botón para REGISTRAR-->
+      <ion-button
+        (click)="submit()"
+        [disabled]="modalequipoForm.invalid"
+        shape="round"
+        >{{ equipment ? "ACTUALIZAR EQUIPO" : "REGISTRAR EQUIPO" }}</ion-button
+      >
+    </ion-footer>
+  </form>
+</ion-content>

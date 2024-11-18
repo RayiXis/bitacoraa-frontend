@@ -1,0 +1,129 @@
+ion-content.signup-content {
+  align-items: center;
+
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+  }
+
+  ion-card {
+    box-shadow: none;
+  }
+
+  .center-box {
+    height: 100%;
+    width: 100%;
+  }
+
+  .signup-box {
+    padding: 20px;
+
+    .signup-title {
+      color: var(--ion-color-primary);
+      text-align: center;
+      margin-bottom: 5px;
+      font-size: 35px;
+      font-weight: 900;
+      font-style: italic;
+    }
+
+    .registro-title {
+      text-align: left;
+      margin-bottom: 5px;
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+    .puesto-title {
+      text-align: center;
+      margin-bottom: 5px;
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+    .modalPuesto-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+
+    .registroequipo-title {
+      text-align: center;
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+    .registrar-equipo {
+      background-color: rgb(49, 49, 49);
+      text-align: center;
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+
+      ion-button {
+        text-align: center;
+      }
+    }
+
+    .centered-label {
+      margin: 0 auto;
+      text-align: center;
+      display: block;
+    }
+
+    .no-found-center {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    form {
+      ion-item {
+        ion-label {
+          padding: auto;
+          font-size: 15px;
+        }
+
+        ion-button {
+          margin-top: 10px;
+        }
+
+        p {
+          margin-top: 10px;
+          a {
+            color: var(--ion-color-primary);
+            text-decoration: none;
+          }
+        }
+      }
+
+      ion-item.error {
+        --highlight-color: #f44336;
+        --border-color: #f44336;
+
+        ion-input {
+          border-color: var(--border-color);
+        }
+
+        .required-text {
+          color: var(--highlight-color);
+        }
+
+        ion-icon[slot="end"][color="danger"] {
+          color: var(--highlight-color);
+        }
+      }
+    }
+    .required-text {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-top: 4px;
+      font-size: 12px;
+    }
+
+    .error-messages ion-note {
+      margin-bottom: 0.5rem;
+    }
+  }
+}

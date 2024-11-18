@@ -1,0 +1,45 @@
+<ion-content class="modalPuesto-content">
+  <div class="center-box">
+    <!--Contenedor principal centrado-->
+    <div class="modalPuesto-box">
+      <!--Contenedor del modal-->
+      <h1 class="modal-title">PUESTO</h1>
+      <!--Campo para ACCORDIONS-->
+      <ion-accordion-group>
+        <!--Campo para DEPENDENCIA-->
+        <ion-label position="floating">DEPENDENCIA:</ion-label>
+        <ion-accordion value="first">
+          <ion-item slot="header" color="light"> </ion-item>
+          <div class="ion-padding" slot="content">First Content</div>
+        </ion-accordion>
+
+        <!--Campo para DIRECCIÓN-->
+        <ion-label position="floating">DIRECCIÓN:</ion-label>
+        <ion-accordion value="second">
+          <ion-item slot="header" color="light"> </ion-item>
+          <div class="ion-padding" slot="content">Second Content</div>
+        </ion-accordion>
+
+        <!--Campo para PUESTO-->
+        <ion-label position="floating">PUESTO:</ion-label>
+        <ion-accordion value="third">
+          <ion-item slot="header" color="light"> </ion-item>
+          <div class="ion-padding" slot="content">Third content</div>
+        </ion-accordion>
+
+        <!--Campo para OFICINA-->
+        <ion-label position="floating">OFICINA:</ion-label>
+        <ion-accordion value="fourth">
+          <ion-item slot="header" color="light"> </ion-item>
+          <div class="ion-padding" slot="content">Fourth content</div>
+        </ion-accordion>
+      </ion-accordion-group>
+
+      <!--Botón para CANCELAR-->
+      <ion-button (click)="cancel()" color="danger" class="ion-margin-start">CANCELAR</ion-button>
+
+      <!--Botón para CANCELAR-->
+      <ion-button color="primary" class="ion-margin-end">ACEPTAR</ion-button>
+    </div>
+  </div>
+</ion-content>

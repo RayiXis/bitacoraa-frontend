@@ -1,0 +1,58 @@
+<ion-content [fullscreen]="true" class="passchange-content">
+  <div class="center-box">
+    <div class="passchange-box">
+      <ion-title>REESTABLECER CONTRASEÑA</ion-title>
+      <!--FORMULARIO DE CAMBIO DE CONTRASEÑA-->
+      <form [formGroup]="passchangeForm" (ngSubmit)="onSubmit()">
+        <!--Campo para nueva contraseña-->
+        <ion-item [class.error]="newpassword.invalid && newpassword.touched">
+          <ion-label position="floating">Nueva contraseña</ion-label>
+          <ion-input
+            type="password"
+            formControlName="newpassword"
+            required
+          ></ion-input>
+          <ion-icon name="shield-sharp" slot="start"></ion-icon>
+        </ion-item>
+
+        <!--Campo para confimar contraseña-->
+        <ion-item
+          [class.error]="confirmPassword.invalid && confirmPassword.touched"
+        >
+          <ion-label position="floating"
+            >Vuelva a escribir la nueva contraseña</ion-label
+          >
+          <ion-input
+            type="password"
+            formControlName="confirmPassword"
+            required
+          ></ion-input>
+          <ion-icon name="refresh" slot="start"></ion-icon>
+
+          <!--Icono de advertencia-->
+          <ion-icon
+            name="asterisk"
+            [color]="newpassword.invalid && newpassword.touched? 'danger':'medium' "
+            slot="end"
+          ></ion-icon>
+        </ion-item>
+
+        <!--Mensaje de error-->
+        <p
+          *ngIf="passchangeForm.hasError('mismatch') && (confirmPassword.touched || confirmPassword.dirty)"
+        >
+          <ion-icon name="alert-circle" color="danger"></ion-icon>
+          Las contraseñas no coinciden.
+        </p>
+
+        <!--Boton para confirmar cambio de contraseña-->
+        <ion-button
+          [disabled]="!passchangeForm.valid"
+          (click)="onSubmit()"
+          shape="round"
+          >CAMBIAR CONTRASEÑA</ion-button
+        >
+      </form>
+    </div>
+  </div>
+</ion-content>

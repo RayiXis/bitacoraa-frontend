@@ -1,0 +1,1011 @@
+<ion-content id="main-content" class="ion-padding">
+  <ion-text color="primary">
+    <h1>Sindicatura</h1>
+  </ion-text>
+
+  <div class="table-container">
+    <div class="search-bar">
+      <ion-searchbar
+        show-clear-button="focus"
+        clear-icon="trash"
+        mode="ios"
+        animated="true"
+        placeholder="Buscar"
+        (ionInput)="filterSearchSindicaturaItems($event)"
+      ></ion-searchbar>
+      <ion-button
+        *ngIf="hasRole('Admin', 'Receivership')"
+        (click)="openModal()"
+        color="primary"
+        shape="round"
+      >
+        <ion-icon name="desktop-outline"></ion-icon>Dar de Alta</ion-button
+      >
+
+      <div class="butonsIcon">
+        <!--FILTRO-->
+        <ion-button
+          id="popover-button-active"
+          size="default"
+          color="dark"
+          fill="clear"
+        >
+          <ion-icon
+            class="icons"
+            src="/assets/icon/traffic-light.svg"
+          ></ion-icon>
+        </ion-button>
+        <!--EXCEL-->
+        <ion-button
+          (click)="exportExcelSindicatura()"
+          size="default"
+          color="dark"
+          fill="clear"
+        >
+          <ion-icon class="icons" src="/assets/icon/iconExcel.svg"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+    <!--POPOVER-->
+    <ion-popover trigger="popover-button-active" dismissOnSelect="true">
+      <ng-template>
+        <ion-content>
+          <ion-list>
+            <ion-item
+              button
+              detail="false"
+              (click)="applyStatusFilter('active')"
+            >
+              <span>Activos</span>
+              <span slot="end" class="status-circle status-disponible"></span>
+            </ion-item>
+            <ion-item
+              button
+              detail="false"
+              (click)="applyStatusFilter('inactive')"
+            >
+              <span>No Activos</span>
+              <span slot="end" class="status-circle status-nodisponible"></span>
+            </ion-item>
+            <ion-item button detail="false" (click)="applyStatusFilter('all')">
+              <span>Todos</span>
+              <span slot="end" class="status-circle status-todos"></span>
+            </ion-item>
+          </ion-list>
+        </ion-content>
+      </ng-template>
+    </ion-popover>
+    <!--Pestañas-->
+    <ion-segment (ionChange)="segmentChanged($event)" value="vehiculos">
+      <ion-segment-button value="vehiculos">
+        <ion-label>RESGUARDO VEHICULAR</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="mobiliario">
+        <ion-label>BIENES MUEBLES</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="inmobiliario">
+        <ion-label>BIENES INMUEBLES</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="dependencias">
+        <ion-label>DEPENDENCIAS</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="direcciones">
+        <ion-label>DIRECCIONES</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+    <!--Tabla de vehiculos-->
+    <ng-container *ngIf="selectedSegment === 'vehiculos'">
+      <table id="vehiculos-table" class="desktop-table">
+        <thead>
+          <tr>
+            <th>
+              Nombre del Responsable
+              <ion-icon
+                [name]="sortSindicatura[0]"
+                (click)="sortCarsTable('responsibleName', 0)"
+              ></ion-icon>
+            </th>
+            <th>
+              Dependencia
+              <ion-icon
+                [name]="sortSindicatura[1]"
+                (click)="sortCarsTable('dependencyName', 1)"
+              ></ion-icon>
+            </th>
+            <th>
+              Dirección
+              <ion-icon
+                [name]="sortSindicatura[2]"
+                (click)="sortCarsTable('unitAdministrative', 2)"
+              ></ion-icon>
+            </th>
+            <th>Ubicación física de resguardo</th>
+            <th>
+              Numero de unidad
+              <ion-icon
+                [name]="sortSindicatura[3]"
+                (click)="sortCarsTable('unitNumber', 3)"
+              ></ion-icon>
+            </th>
+            <th>
+              Marca
+              <ion-icon
+                [name]="sortSindicatura[4]"
+                (click)="sortCarsTable('brand', 4)"
+              ></ion-icon>
+            </th>
+            <th>
+              Tipo de carrocería
+              <ion-icon
+                [name]="sortSindicatura[5]"
+                (click)="sortCarsTable('class', 5)"
+              ></ion-icon>
+            </th>
+            <th>
+              Modelo
+              <ion-icon
+                [name]="sortSindicatura[6]"
+                (click)="sortCarsTable('model', 6)"
+              ></ion-icon>
+            </th>
+            <th>
+              Placas
+              <ion-icon
+                [name]="sortSindicatura[7]"
+                (click)="sortCarsTable('licensePlates', 7)"
+              ></ion-icon>
+            </th>
+            <th>
+              Color
+              <ion-icon
+                [name]="sortSindicatura[8]"
+                (click)="sortCarsTable('color', 8)"
+              ></ion-icon>
+            </th>
+            <th>
+              Numero de Serie
+              <ion-icon
+                [name]="sortSindicatura[9]"
+                (click)="sortCarsTable('serialNumber', 9)"
+              ></ion-icon>
+            </th>
+            <th>Observaciones</th>
+            <th>Estado</th>
+            <th *ngIf="hasRole('Admin', 'Receivership')"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Aquí se insertarían las filas de la tabla con *NgFor -->
+          <tr *ngFor="let vehiculo of filteredCars">
+            <td>{{ vehiculo.responsibleName }}</td>
+            <td>{{ vehiculo.dependencyName }}</td>
+            <td>{{ vehiculo.unitAdministrative }}</td>
+            <td>{{ vehiculo.location }}</td>
+            <td>{{ vehiculo.unitNumber }}</td>
+            <td>{{ vehiculo.brand }}</td>
+            <td>{{ vehiculo.class }}</td>
+            <td>{{ vehiculo.model }}</td>
+            <td>{{ vehiculo.licensePlates }}</td>
+            <td>{{ vehiculo.color }}</td>
+            <td>{{ vehiculo.serialNumber }}</td>
+            <td>{{ vehiculo.observations }}</td>
+            <td>
+              <div
+                [ngStyle]="{
+                  'background-color': vehiculo.isActive ? 'green' : 'red',
+                  'border-radius': '50%',
+                  width: '10px',
+                  height: '10px',
+                  display: 'inline-block'
+                }"
+              ></div>
+            </td>
+            <td>
+              <ion-button
+                *ngIf="vehiculo.isActive && hasRole('Admin', 'Receivership')"
+                (click)="editarVehiculo(vehiculo)"
+              >
+                <ion-icon name="pencil"></ion-icon>
+              </ion-button>
+              <ion-button
+                *ngIf="vehiculo.isActive && hasRole('Admin', 'Receivership')"
+                (click)="deleteCars(vehiculo)"
+                color="danger"
+              >
+                <ion-icon name="trash-bin"></ion-icon>
+              </ion-button>
+              <ion-button
+                *ngIf="vehiculo.isActive && hasRole('Admin', 'Receivership')"
+                color="warning"
+                (click)="assignCars(vehiculo._id)"
+              >
+                <ion-icon name="people"></ion-icon>
+              </ion-button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!--Tarjetas de vehiculos para dispositivos móviles-->
+      <ng-container *ngFor="let vehiculo of filteredCars">
+        <ion-card class="mobile-cards">
+          <ion-card-header>
+            <ion-card-title>{{ vehiculo.brand }}</ion-card-title>
+            <ion-card-title>{{ vehiculo.model }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p>
+              <strong>Nombre del responsable:</strong>
+              {{ vehiculo.responsibleName }}
+            </p>
+            <p>
+              <strong>Dependencia:</strong>
+              {{ vehiculo.dependencyName }}
+            </p>
+            <p>
+              <strong>Dirección:</strong>
+              {{ vehiculo.unitAdministrative }}
+            </p>
+            <p><strong>Número de Unidad:</strong> {{ vehiculo.unitNumber }}</p>
+            <p><strong>Marca:</strong> {{ vehiculo.brand }}</p>
+            <p>
+              <strong>Clase:</strong>
+              {{ vehiculo.class }}
+            </p>
+            <p><strong>Modelo:</strong> {{ vehiculo.model }}</p>
+            <p><strong>Placas:</strong> {{ vehiculo.licensePlates }}</p>
+            <p><strong>Color:</strong> {{ vehiculo.color }}</p>
+            <p><strong>Numero de Serie:</strong> {{ vehiculo.serialNumber }}</p>
+            <p><strong>Observaciones:</strong> {{ vehiculo.observations }}</p>
+            <p>
+              <strong>Ubicación física de resguardo:</strong>
+              {{ vehiculo.location }}
+            </p>
+            <p>
+              <strong>Estado:</strong>
+              <span
+                [ngStyle]="{ color: vehiculo.isActive ? 'green' : 'red' }"
+                >{{ vehiculo.isActive ? "Disponible" : "NO Disponible" }}</span
+              >
+            </p>
+            <ion-button
+              *ngIf="vehiculo.isActive && hasRole('Admin', 'Receivership')"
+              (click)="editarVehiculo(vehiculo)"
+            >
+              <ion-icon name="pencil"></ion-icon>
+            </ion-button>
+            <ion-button
+              *ngIf="vehiculo.isActive && hasRole('Admin', 'Receivership')"
+              (click)="deleteCars(vehiculo)"
+              color="danger"
+              ><ion-icon name="trash-bin"></ion-icon
+            ></ion-button>
+            <ion-button
+              *ngIf="vehiculo.isActive && hasRole('Admin', 'Receivership')"
+              color="warning"
+              (click)="assignCars(vehiculo._id)"
+            >
+              <ion-icon name="people"></ion-icon>
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ng-container>
+    </ng-container>
+    <!--Tabla de mobiliario-->
+    <ng-container *ngIf="selectedSegment === 'mobiliario'">
+      <table id="mobiliario-table" class="desktop-table">
+        <thead>
+          <tr>
+            <th>
+              Nombre del Responsable
+              <ion-icon
+                [name]="sortSindicatura[10]"
+                (click)="sortFunitureTable('responsibleName', 10)"
+              ></ion-icon>
+            </th>
+            <th>
+              Dependencia
+              <ion-icon
+                [name]="sortSindicatura[11]"
+                (click)="sortFunitureTable('dependencyName', 11)"
+              ></ion-icon>
+            </th>
+            <th>
+              Dirección
+              <ion-icon
+                [name]="sortSindicatura[12]"
+                (click)="sortFunitureTable('unitAdministrative', 12)"
+              ></ion-icon>
+            </th>
+            <th>
+              Clave del Bien
+              <ion-icon
+                [name]="sortSindicatura[13]"
+                (click)="sortFunitureTable('propertyKey', 13)"
+              ></ion-icon>
+            </th>
+            <th>
+              Descripcion y marca de los bienes muebles
+              <ion-icon
+                [name]="sortSindicatura[14]"
+                (click)="sortFunitureTable('descriptionBrand', 14)"
+              ></ion-icon>
+            </th>
+            <th>
+              Serie
+              <ion-icon
+                [name]="sortSindicatura[15]"
+                (click)="sortFunitureTable('serialNumber', 15)"
+              ></ion-icon>
+            </th>
+            <th>
+              Color
+              <ion-icon
+                [name]="sortSindicatura[16]"
+                (click)="sortFunitureTable('color', 16)"
+              ></ion-icon>
+            </th>
+            <th>
+              Estado Actual
+              <ion-icon
+                [name]="sortSindicatura[17]"
+                (click)="sortFunitureTable('actualState', 17)"
+              ></ion-icon>
+            </th>
+            <th>
+              Numero de Factura
+              <ion-icon
+                [name]="sortSindicatura[18]"
+                (click)="sortFunitureTable('invoiceNumber', 18)"
+              ></ion-icon>
+            </th>
+            <th>Observaciones</th>
+            <th>Ubicación física de resguardo</th>
+            <th>Estado</th>
+            <th *ngIf="hasRole('Admin', 'Receivership')"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Aquí se insertarían las filas de la tabla con *NgFor -->
+          <tr *ngFor="let mobiliario of filteredFurniture">
+            <td>{{ mobiliario.responsibleName }}</td>
+            <td>{{ mobiliario.dependencyName }}</td>
+            <td>{{ mobiliario.unitAdministrative }}</td>
+            <td>{{ mobiliario.propertyKey }}</td>
+            <td>{{ mobiliario.descriptionBrand }}</td>
+            <td>{{ mobiliario.serialNumber }}</td>
+            <td>{{ mobiliario.color }}</td>
+            <td>{{ mobiliario.actualState }}</td>
+            <td>{{ mobiliario.invoiceNumber }}</td>
+            <td>{{ mobiliario.observations }}</td>
+            <td>{{ mobiliario.location }}</td>
+            <td>
+              <div
+                [ngStyle]="{
+                  'background-color': mobiliario.state ? 'green' : 'red',
+                  'border-radius': '50%',
+                  width: '10px',
+                  height: '10px',
+                  display: 'inline-block'
+                }"
+              ></div>
+            </td>
+            <td>
+              <ion-button
+                *ngIf="mobiliario.state && hasRole('Admin', 'Receivership')"
+                (click)="editarMueble(mobiliario)"
+              >
+                <ion-icon name="pencil"></ion-icon
+              ></ion-button>
+              <ion-button
+                *ngIf="mobiliario.state && hasRole('Admin', 'Receivership')"
+                (click)="deleteFurniture(mobiliario)"
+                color="danger"
+                ><ion-icon name="trash-bin"></ion-icon
+              ></ion-button>
+              <ion-button
+                *ngIf="mobiliario.state && hasRole('Admin', 'Receivership')"
+                color="warning"
+                (click)="assignMubles(mobiliario._id)"
+              >
+                <ion-icon name="people"></ion-icon>
+              </ion-button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!--Tarjetas de mobiliario para dispositivos móviles-->
+      <ng-container *ngFor="let mobiliario of filteredFurniture">
+        <ion-card class="mobile-cards">
+          <ion-card-header>
+            <ion-card-title>{{ mobiliario.descriptionBrand }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p>
+              <strong>Nombre del Responsable:</strong>
+              {{ mobiliario.responsibleName }}
+            </p>
+            <p><strong>Dependencia:</strong> {{ mobiliario.dependencyName }}</p>
+            <p>
+              <strong>Dirección:</strong> {{ mobiliario.unitAdministrative }}
+            </p>
+            <p><strong>Clave del Bien:</strong> {{ mobiliario.propertyKey }}</p>
+            <p><strong>Serie:</strong> {{ mobiliario.serialNumber }}</p>
+            <p>
+              <strong>Color:</strong>
+              {{ mobiliario.color }}
+            </p>
+            <p><strong>Estado Actual:</strong> {{ mobiliario.actualState }}</p>
+            <p>
+              <strong>Numero de Factura:</strong> {{ mobiliario.invoiceNumber }}
+            </p>
+            <p><strong>Observaciones:</strong> {{ mobiliario.observations }}</p>
+            <p>
+              <strong>Ubicación física de resguardo:</strong>
+              {{ mobiliario.location }}
+            </p>
+            <p>
+              <strong>Estado:</strong>
+              <span [ngStyle]="{ color: mobiliario.state ? 'green' : 'red' }">{{
+                mobiliario.state ? "Disponible" : "NO Disponible"
+              }}</span>
+            </p>
+            <ion-button
+              *ngIf="mobiliario.state && hasRole('Admin', 'Receivership')"
+              (click)="editarMueble(mobiliario)"
+            >
+              <ion-icon name="pencil"></ion-icon>
+            </ion-button>
+            <ion-button
+              *ngIf="mobiliario.state && hasRole('Admin', 'Receivership')"
+              (click)="deleteFurniture(mobiliario)"
+              color="danger"
+              ><ion-icon name="trash-bin"></ion-icon
+            ></ion-button>
+            <ion-button
+              *ngIf="mobiliario.state && hasRole('Admin', 'Receivership')"
+              color="warning"
+              (click)="assignMubles(mobiliario._id)"
+            >
+              <ion-icon name="people"></ion-icon>
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ng-container>
+    </ng-container>
+    <!--Tabla de inmobiliario-->
+    <ng-container *ngIf="selectedSegment === 'inmobiliario'">
+      <table id="inmobiliario-table" class="desktop-table">
+        <thead>
+          <tr>
+            <th>
+              Folio
+              <ion-icon
+                [name]="sortSindicatura[21]"
+                (click)="sortTerrainTable('folio', 21)"
+              ></ion-icon>
+            </th>
+            <th>
+              Descripción del Inmueble
+              <ion-icon
+                [name]="sortSindicatura[22]"
+                (click)="sortTerrainTable('description', 22)"
+              ></ion-icon>
+            </th>
+            <th>
+              Ubicación
+              <ion-icon
+                [name]="sortSindicatura[23]"
+                (click)="sortTerrainTable('location', 23)"
+              ></ion-icon>
+            </th>
+            <th>
+              Tipo
+              <ion-icon
+                [name]="sortSindicatura[24]"
+                (click)="sortTerrainTable('type', 24)"
+              ></ion-icon>
+            </th>
+            <th colspan="2">Superficie (M2)</th>
+            <!-- Superficie con dos subcolumnas -->
+            <th>
+              Clave Catastral
+              <ion-icon
+                [name]="sortSindicatura[27]"
+                (click)="sortTerrainTable('cadastralKey', 27)"
+              ></ion-icon>
+            </th>
+            <th>Status</th>
+            <th>
+              Valor Catastral
+              <ion-icon
+                [name]="sortSindicatura[28]"
+                (click)="sortTerrainTable('cadastralValue', 28)"
+              ></ion-icon>
+            </th>
+            <th>
+              Valor de Contabilidad
+              <ion-icon
+                [name]="sortSindicatura[29]"
+                (click)="sortTerrainTable('bookValue', 29)"
+              ></ion-icon>
+            </th>
+            <th>Imagen</th>
+            <th>Documento PDF</th>
+            <th>
+              Inscripción al Reg. Pub. de la Propiedad
+              <ion-icon
+                [name]="sortSindicatura[30]"
+                (click)="sortTerrainTable('pubPropReg', 30)"
+              ></ion-icon>
+            </th>
+            <th>
+              Fecha Último Avalúo
+              <ion-icon
+                [name]="sortSindicatura[31]"
+                (click)="sortTerrainTable('lastAppraisalDate', 31)"
+              ></ion-icon>
+            </th>
+            <th>Estado</th>
+            <th *ngIf="hasRole('Admin', 'Receivership')"></th>
+          </tr>
+          <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>
+              Construcción
+              <ion-icon
+                [name]="sortSindicatura[25]"
+                (click)="sortTerrainTable('surface.construction', 25)"
+              ></ion-icon>
+            </th>
+            <!-- Subcolumna 1: Construcción -->
+            <th>
+              Terreno
+              <ion-icon
+                [name]="sortSindicatura[26]"
+                (click)="sortTerrainTable('surface.land', 26)"
+              ></ion-icon>
+            </th>
+            <!-- Subcolumna 2: Terreno -->
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Aquí se insertarían las filas de la tabla con *NgFor -->
+          <tr *ngFor="let inmobiliario of filteredTerrain">
+            <td>{{ inmobiliario.folio }}</td>
+            <td>{{ inmobiliario.description }}</td>
+            <td>{{ inmobiliario.location }}</td>
+            <td>{{ inmobiliario.type }}</td>
+            <td>{{ inmobiliario.surface?.construction }}</td>
+            <td>{{ inmobiliario.surface?.land }} Mts<sup>2</sup></td>
+            <td>{{ inmobiliario.cadastralKey }}</td>
+            <td>{{ inmobiliario.status }}</td>
+            <td>${{ inmobiliario.cadastralValue }}</td>
+            <td>${{ inmobiliario.bookValue }}</td>
+            <td>{{ inmobiliario }}</td>
+            <td>{{ inmobiliario }}</td>
+            <td>{{ inmobiliario.pubPropReg }}</td>
+            <td>{{ inmobiliario.lastAppraisalDate }}</td>
+            <td>
+              <div
+                [ngStyle]="{
+                  'background-color': inmobiliario.isActive ? 'green' : 'red',
+                  'border-radius': '50%',
+                  width: '10px',
+                  height: '10px',
+                  display: 'inline-block'
+                }"
+              ></div>
+            </td>
+            <td>
+              <ion-button
+                *ngIf="
+                  inmobiliario.isActive && hasRole('Admin', 'Receivership')
+                "
+                (click)="editarInmueble(inmobiliario)"
+              >
+                <ion-icon name="pencil"></ion-icon
+              ></ion-button>
+              <ion-button
+                *ngIf="
+                  inmobiliario.isActive && hasRole('Admin', 'Receivership')
+                "
+                (click)="deleteProperties(inmobiliario)"
+                color="danger"
+                ><ion-icon name="trash-bin"></ion-icon
+              ></ion-button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!--Tarjetas de mobiliario para dispositivos móviles-->
+      <ng-container *ngFor="let inmobiliario of filteredTerrain">
+        <ion-card class="mobile-cards">
+          <ion-card-header>
+            <ion-card-title
+              >{{ inmobiliario.folio }}
+              {{ inmobiliario.description }}</ion-card-title
+            >
+          </ion-card-header>
+          <ion-card-content>
+            <p><strong>Ubicación:</strong> {{ inmobiliario.location }}</p>
+            <p><strong>Tipo:</strong> {{ inmobiliario.type }}</p>
+            <p>
+              <strong>Superficie (M2):</strong> Construcción:
+              {{ inmobiliario.surface?.construction }}, Terreno:
+              {{ inmobiliario.surface?.land }} Mts<sup>2</sup>
+            </p>
+            <p>
+              <strong>Clave Catastral:</strong> {{ inmobiliario.cadastralKey }}
+            </p>
+            <p>
+              <strong>Status:</strong>
+              {{ inmobiliario.status }}
+            </p>
+            <p>
+              <strong>Valor Catastral:</strong> ${{
+                inmobiliario.cadastralValue
+              }}
+            </p>
+            <p>
+              <strong>Inscripción al Reg. Pub. de la Propiedad:</strong>
+              {{ inmobiliario.pubPropReg }}
+            </p>
+            <p>
+              <strong>Valor de Contabilidad:</strong>
+              ${{ inmobiliario.bookValue }}
+            </p>
+            <p>
+              <strong>Fecha Último Avalúo:</strong>
+              {{ inmobiliario.lastAppraisalDate }}
+            </p>
+            <p>
+              <strong>Estado: </strong>
+              <span
+                [ngStyle]="{ color: inmobiliario.isActive ? 'green' : 'red' }"
+                >{{
+                  inmobiliario.isActive ? "Disponible" : "NO Disponible"
+                }}</span
+              >
+            </p>
+            <ion-button
+              *ngIf="inmobiliario.isActive && hasRole('Admin', 'Receivership')"
+              (click)="editarInmueble(inmobiliario)"
+            >
+              <ion-icon name="pencil"></ion-icon>
+            </ion-button>
+            <ion-button
+              *ngIf="inmobiliario.isActive && hasRole('Admin', 'Receivership')"
+              (click)="deleteProperties(inmobiliario)"
+              color="danger"
+              ><ion-icon name="trash-bin"></ion-icon
+            ></ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ng-container>
+    </ng-container>
+    <!-- Tabla de Dependencias -->
+    <ng-container *ngIf="selectedSegment === 'dependencias'">
+      <table id="dependencias-table" class="desktop-table">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>
+              Nombre de Dependencia
+              <ion-icon
+                [name]="sortSindicatura[19]"
+                (click)="sortDependencyTable('name', 19)"
+              ></ion-icon>
+            </th>
+            <th>Estado</th>
+            <th *ngIf="hasRole('Admin', 'Receivership')">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let dependencia of filteredDependencies">
+            <td>{{ dependencia.code }}</td>
+            <td>{{ dependencia.name }}</td>
+            <td>
+              <div
+                [ngStyle]="{
+                  'background-color': dependencia.state ? 'green' : 'red',
+                  'border-radius': '50%',
+                  width: '10px',
+                  height: '10px',
+                  display: 'inline-block'
+                }"
+              ></div>
+            </td>
+            <td>
+              <ion-button
+                *ngIf="dependencia.state && hasRole('Admin', 'Receivership')"
+                (click)="deleteDependency(dependencia)"
+                color="danger"
+                ><ion-icon name="trash-bin"></ion-icon
+              ></ion-button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!--Tarjetas de dependencias para dispositivos móviles-->
+      <ng-container *ngFor="let dependencia of filteredDependencies">
+        <ion-card class="mobile-cards">
+          <ion-card-header>
+            <ion-card-title>{{ dependencia.name }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p>
+              <strong>Código:</strong>
+              <span>{{ dependencia.code }}</span>
+            </p>
+            <p>
+              <strong>Estado:</strong>
+              <span
+                [ngStyle]="{ color: dependencia.state ? 'green' : 'red' }"
+                >{{ dependencia.state ? "Disponible" : "NO Disponible" }}</span
+              >
+            </p>
+            <ion-button
+              *ngIf="dependencia.state && hasRole('Admin', 'Receivership')"
+              (click)="deleteDependency(dependencia)"
+              color="danger"
+            >
+              <ion-icon name="trash-bin"></ion-icon
+            ></ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ng-container>
+    </ng-container>
+    <!-- Tabla de Direcciones -->
+    <ng-container *ngIf="selectedSegment === 'direcciones'">
+      <table id="direcciones-table" class="desktop-table">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>
+              Nombre de Dirección
+              <ion-icon
+                [name]="sortSindicatura[20]"
+                (click)="sortDirectionTable('name', 20)"
+              ></ion-icon>
+            </th>
+            <th>Estado</th>
+            <th *ngIf="hasRole('Admin', 'Receivership')">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let direccion of filteredDirections">
+            <td>{{ direccion.code }}</td>
+            <td>{{ direccion.name }}</td>
+            <td>
+              <div
+                [ngStyle]="{
+                  'background-color': direccion.state ? 'green' : 'red',
+                  'border-radius': '50%',
+                  width: '10px',
+                  height: '10px',
+                  display: 'inline-block'
+                }"
+              ></div>
+            </td>
+            <td>
+              <ion-button
+                *ngIf="direccion.state && hasRole('Admin', 'Receivership')"
+                (click)="deleteDirection(direccion)"
+                color="danger"
+              >
+                <ion-icon name="trash-bin"></ion-icon
+              ></ion-button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!--Tarjetas de direcciones para dispositivos móviles-->
+      <ng-container *ngFor="let direccion of filteredDirections">
+        <ion-card class="mobile-cards">
+          <ion-card-header>
+            <ion-card-title>{{ direccion.name }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p>
+              <strong>Código:</strong>
+              <span>{{ direccion.code }}</span>
+            </p>
+            <p>
+              <strong>Estado:</strong>
+              <span [ngStyle]="{ color: direccion.state ? 'green' : 'red' }">{{
+                direccion.state ? "Disponible" : "NO Disponible"
+              }}</span>
+            </p>
+            <ion-button
+              *ngIf="direccion.state && hasRole('Admin', 'Receivership')"
+              (click)="deleteDirection(direccion)"
+              color="danger"
+              ><ion-icon name="trash-bin"></ion-icon
+            ></ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ng-container>
+    </ng-container>
+    <!--*====================================== Loading spinner ======================================*-->
+    <div class="spinner-container" *ngIf="isLoading">
+      <ion-spinner name="bubbles"></ion-spinner>
+    </div>
+    <!--*====================================== No sindicatura found message ======================================*-->
+    <div class="noSindicaturaData" *ngIf="noSindicaturaData">
+      <ion-label mode="ios" class="label" color="danger">
+        <h2>Datos no encontrados!</h2>
+      </ion-label>
+    </div>
+    <!--*====================================== Pagination controls ======================================*-->
+    <div class="rowPage">
+      <p class="rows">
+        Filas por página:
+        <span id="btn-rows">
+          <ion-button fill="clear">
+            {{ getLimitData() }}
+            <ion-icon slot="end" name="caret-down-outline"></ion-icon>
+          </ion-button>
+          <ion-popover
+            trigger="btn-rows"
+            triggerAction="click"
+            dismissOnSelect="true"
+          >
+            <ng-template>
+              <ion-content>
+                <ion-list>
+                  <ion-item
+                    [button]="true"
+                    [detail]="false"
+                    (click)="changeRowsPerPage(5)"
+                    >5</ion-item
+                  >
+                  <ion-item
+                    [button]="true"
+                    [detail]="false"
+                    (click)="changeRowsPerPage(10)"
+                    >10</ion-item
+                  >
+                  <ion-item
+                    [button]="true"
+                    [detail]="false"
+                    (click)="changeRowsPerPage(15)"
+                    >15</ion-item
+                  >
+                  <ion-item
+                    [button]="true"
+                    [detail]="false"
+                    (click)="changeRowsPerPage(20)"
+                    >20</ion-item
+                  >
+                </ion-list>
+              </ion-content>
+            </ng-template>
+          </ion-popover>
+        </span>
+      </p>
+
+      <p class="pages" *ngIf="selectedSegment === 'vehiculos'">
+        <span>Página {{ pageVehiculo }} de {{ lastPageVehiculo }}</span>
+        <span>
+          <ion-button
+            fill="clear"
+            size="small"
+            (click)="changePage(-1)"
+            [disabled]="pageVehiculo <= 1"
+          >
+            <ion-icon slot="icon-only" name="caret-back-outline"></ion-icon>
+          </ion-button>
+          <ion-button
+            fill="clear"
+            size="small"
+            (click)="changePage(1)"
+            [disabled]="pageVehiculo >= lastPageVehiculo"
+          >
+            <ion-icon slot="icon-only" name="caret-forward-outline"></ion-icon>
+          </ion-button>
+        </span>
+      </p>
+
+      <p class="pages" *ngIf="selectedSegment === 'mobiliario'">
+        <span>Página {{ pageMobiliario }} de {{ lastPageMobiliario }}</span>
+        <span>
+          <ion-button
+            fill="clear"
+            size="small"
+            (click)="changePage(-1)"
+            [disabled]="pageMobiliario <= 1"
+          >
+            <ion-icon slot="icon-only" name="caret-back-outline"></ion-icon>
+          </ion-button>
+          <ion-button
+            fill="clear"
+            size="small"
+            (click)="changePage(1)"
+            [disabled]="pageMobiliario >= lastPageMobiliario"
+          >
+            <ion-icon slot="icon-only" name="caret-forward-outline"></ion-icon>
+          </ion-button>
+        </span>
+      </p>
+
+      <p class="pages" *ngIf="selectedSegment === 'inmobiliario'">
+        <span>Página {{ pageInmobiliario }} de {{ lastPageInmobiliario }}</span>
+        <span>
+          <ion-button
+            fill="clear"
+            size="small"
+            (click)="changePage(-1)"
+            [disabled]="pageInmobiliario <= 1"
+          >
+            <ion-icon slot="icon-only" name="caret-back-outline"></ion-icon>
+          </ion-button>
+          <ion-button
+            fill="clear"
+            size="small"
+            (click)="changePage(1)"
+            [disabled]="pageInmobiliario >= lastPageInmobiliario"
+          >
+            <ion-icon slot="icon-only" name="caret-forward-outline"></ion-icon>
+          </ion-button>
+        </span>
+      </p>
+
+      <p class="pages" *ngIf="selectedSegment === 'dependencias'">
+        <span>Página {{ pageDependencias }} de {{ lastPageDependencias }}</span>
+        <span>
+          <ion-button
+            fill="clear"
+            size="small"
+            (click)="changePage(-1)"
+            [disabled]="pageDependencias <= 1"
+          >
+            <ion-icon slot="icon-only" name="caret-back-outline"></ion-icon>
+          </ion-button>
+          <ion-button
+            fill="clear"
+            size="small"
+            (click)="changePage(1)"
+            [disabled]="pageDependencias >= lastPageDependencias"
+          >
+            <ion-icon slot="icon-only" name="caret-forward-outline"></ion-icon>
+          </ion-button>
+        </span>
+      </p>
+
+      <p class="pages" *ngIf="selectedSegment === 'direcciones'">
+        <span>Página {{ pageDirecciones }} de {{ lastPageDirecciones }}</span>
+        <span>
+          <ion-button
+            fill="clear"
+            size="small"
+            (click)="changePage(-1)"
+            [disabled]="pageDirecciones <= 1"
+          >
+            <ion-icon slot="icon-only" name="caret-back-outline"></ion-icon>
+          </ion-button>
+          <ion-button
+            fill="clear"
+            size="small"
+            (click)="changePage(1)"
+            [disabled]="pageDirecciones >= lastPageDirecciones"
+          >
+            <ion-icon slot="icon-only" name="caret-forward-outline"></ion-icon>
+          </ion-button>
+        </span>
+      </p>
+    </div>
+  </div>
+</ion-content>

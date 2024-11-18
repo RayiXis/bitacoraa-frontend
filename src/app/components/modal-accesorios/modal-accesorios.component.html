@@ -1,0 +1,114 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>{{ accesorio ? "Editar Accesorio" : "Accesorio" }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="danger" (click)="closeAccesorioFormAlert()"
+        ><ion-icon name="close"></ion-icon>Cancelar</ion-button
+      >
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="accesorioForm" (ngSubmit)="submit()">
+    <ion-list class="input-group">
+      <ion-item>
+        <ion-label position="stacked">Número de Inventario</ion-label>
+        <ion-input
+          formControlName="inventoryNumber"
+          type="text"
+          placeholder="Ej. 12345"
+        ></ion-input>
+        <!--Mensaje al poner dato no valido o vacio-->
+        <ion-text
+          color="danger"
+          *ngIf="
+            accesorioForm.get('inventoryNumber')?.invalid &&
+            accesorioForm.get('inventoryNumber')?.touched
+          "
+        >
+          El número de inventario es obligatorio
+        </ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Tipo</ion-label>
+        <ion-input
+          formControlName="type"
+          type="text"
+          placeholder="Ej. Proyector, Carpa, etc"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Descripción</ion-label>
+        <ion-input
+          formControlName="description"
+          type="text"
+          placeholder="Ej. Proyector Epson"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">IP</ion-label>
+        <ion-input
+          formControlName="ip"
+          type="text"
+          placeholder="Ej. 192.228.17.57 "
+        ></ion-input>
+      </ion-item>
+      <ion-text
+        *ngIf="
+          accesorioForm.get('ip')?.errors?.['pattern'] &&
+          accesorioForm.get('ip')?.touched
+        "
+        color="danger"
+        class="ion-text-center"
+      >
+        <p>La IP ingresada no es válida. Debe tener el formato: Ej. 192.168.0.1</p>
+      </ion-text>
+      <!-- FOTOS -->
+      <ion-item class="contenedor-btn-file" (click)="inputImage()">
+        <label class="lblName" for="file">{{ txtDefault }}</label>
+        <!-- Input para cargar la imagen -->
+        <input
+          formControlName="photos"
+          #fileInput
+          id="file"
+          accept=".png, .jpg, jpeg"
+          multiple="true"
+          type="file"
+          (click)="onFileChange($event)"
+        />
+        <ion-icon slot="end" size="small" name="images-outline"></ion-icon>
+      </ion-item>
+      <!-- FOTOS DEL EQUIPO -->
+      <swiper-container
+        class="mySwiper"
+        pagination="true"
+        grab-cursor="true"
+        pagination-clickable="true"
+      >
+        <ng-container>
+          <swiper-slide *ngFor="let fotos of accesorio?.photos">
+            <ion-col *ngIf="accesorio.photos.length >= 1" size="12" sizeMd="4">
+              <ion-item>
+                <ion-img
+                  [src]="catalogoApi + '/img/Accessory/' + fotos"
+                  [alt]="fotos"
+                ></ion-img>
+              </ion-item>
+            </ion-col>
+          </swiper-slide>
+        </ng-container>
+      </swiper-container>
+    </ion-list>
+    <ion-footer class="ion-no-border button-container">
+      <ion-button
+        type="submit"
+        [disabled]="!accesorioForm.valid"
+        shape="round"
+        >{{
+          accesorio ? "Actualizar Accesorio" : "Registrar Accesorio"
+        }}</ion-button
+      >
+    </ion-footer>
+  </form>
+</ion-content>

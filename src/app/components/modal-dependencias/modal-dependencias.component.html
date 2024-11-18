@@ -1,0 +1,35 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>{{
+      dependencia ? "Editar Dependencia" : "Registrar Dependencia"
+    }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="danger" (click)="closeModalAlert()">
+        <ion-icon name="close"></ion-icon>Cancelar
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="form">
+    <ion-list class="input-group">
+      <ion-item>
+        <ion-label position="stacked">Nombre de Dependencia</ion-label>
+        <ion-input
+          formControlName="name"
+          (input)="onInputChange($event)"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Código Alfanumérico</ion-label>
+        <ion-input formControlName="code"></ion-input>
+      </ion-item>
+    </ion-list>
+  </form>
+  <ion-footer class="ion-no-border button-container">
+    <ion-button shape="round" (click)="save()" [disabled]="!form.valid">
+      {{ dependencia ? "Actualizar Dependencia" : "Registrar Dependencia" }}
+    </ion-button>
+  </ion-footer>
+</ion-content>

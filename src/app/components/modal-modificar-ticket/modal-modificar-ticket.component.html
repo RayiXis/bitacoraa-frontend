@@ -1,0 +1,117 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Asignar Tarea</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="spinner-container" *ngIf="isLoading">
+    <ion-spinner name="bubbles"></ion-spinner>
+  </div>
+  <ion-grid>
+    <div class="content" *ngIf="!isLoading">
+      <ion-list *ngFor="let ticket of tickets">
+        <swiper-container
+          class="mySwiper"
+          loop="true"
+          pagination="true"
+          grab-cursor="true"
+          pagination-clickable="true"
+          space-between="30"
+        >
+        <ng-container *ngFor="let ticketImg of tickets">
+          <swiper-slide>
+            <ion-col *ngIf="ticketImg.photoVideo.length >= 1" size="12" sizeMd="4">
+              <ion-item>
+                <ion-img [src]="bitacoraApi + '/img/tickets/' + ticketImg.photoVideo" [alt]="ticketImg.photoVideo"></ion-img>
+              </ion-item>
+            </ion-col>
+          </swiper-slide>
+        </ng-container>
+        </swiper-container>
+
+        <ion-col size="12" sizeMd="4">
+          <ion-item>
+            <ion-label>Fecha y Hora</ion-label>
+            <ion-text color="medium">{{
+              ticket.createdAt | date : "dd/MM/yyyy HH:mm"
+            }}</ion-text>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="12" sizeMd="4">
+          <ion-item>
+            <ion-label>No. Folio</ion-label>
+            <ion-text color="medium">{{ ticket.folio }}</ion-text>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="12" sizeMd="4">
+          <ion-item>
+            <ion-label>Usuario</ion-label>
+            <ion-text color="medium"
+              >{{ userEmployee[ticket.userId].name }}
+              {{ userEmployee[ticket.userId].lastname }}</ion-text
+            >
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="12" sizeMd="4">
+          <ion-item>
+            <ion-label>Problema</ion-label>
+            <ion-text color="medium">{{ ticket.reportDetail }}</ion-text>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="12" sizeMd="4">
+          <ion-item>
+            <ion-select
+              [disabled]="ticket.status === 2"
+              mode="ios"
+              label="Técnico"
+              placeholder="{{ assignedTechnical }}"
+              (ionChange)="onTechSelect($event)"
+            >
+              <ion-select-option
+                *ngFor="let tech of AllTechs"
+                [value]="tech.authId"
+              >
+                {{ tech.name }} {{ tech.lastname }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="12" sizeMd="4">
+          <ion-item>
+            <ion-label>Estatus</ion-label>
+            <ion-text color="medium">{{
+              ticket.status | ticketStatus
+            }}</ion-text>
+          </ion-item>
+        </ion-col>
+      </ion-list>
+    </div>
+  </ion-grid>
+</ion-content>
+
+<ion-footer>
+  <div class="button-row" *ngFor="let ticket of tickets">
+    <ion-button
+      expand="block"
+      [disabled]="btnDisabled"
+      (click)="assignedIssue()"
+      >Asignar Tarea</ion-button
+    >
+    <ion-button
+      expand="block"
+      [disabled]="ticket.status === 2"
+      color="success"
+      (click)="autoAsignar()"
+      >Auto Asignar Tarea</ion-button
+    >
+  </div>
+</ion-footer>

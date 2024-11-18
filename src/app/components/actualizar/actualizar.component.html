@@ -1,0 +1,373 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>ACTUALIZAR EQUIPO</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="danger" (click)="closeModal()">
+        <ion-icon name="close-circle-outline" size="large"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <form [formGroup]="abtactualizacionForm" (ngSubmit)="onSubmit()">
+    <ion-list class="input-group">
+      <!-- BUSCAR USUARIO A VINCULAR -->
+      <ion-item>
+        <div class="user-container">
+          <ion-label>Usuario:</ion-label>
+          <div class="user-info">
+            <ion-text *ngIf="isUserSelected">
+              {{ selectedUser.name }} {{ selectedUser.lastname }}
+            </ion-text>
+            <ion-button
+              id="modal-usuarios"
+              *ngIf="!isUserSelected"
+              class="btnModalUser"
+              size="small"
+              mode="ios"
+              fill="outline"
+              (click)="openUserModal()"
+            >
+              Buscar usuario
+              <ion-icon slot="end" name="person"></ion-icon>
+            </ion-button>
+            <ion-button
+              id="modal-usuarios"
+              color="warning"
+              *ngIf="isUserSelected"
+              size="small"
+              mode="ios"
+              fill="outline"
+              (click)="openUserModal()"
+            >
+              Cambiar usuario
+              <ion-icon slot="end" name="person"></ion-icon>
+            </ion-button>
+          </div>
+          <ion-modal
+            #modal
+            trigger="modal-usuarios"
+            [initialBreakpoint]="0.25"
+            [breakpoints]="[0.25, 0.5, 0.75]"
+            [backdropBreakpoint]="0.5"
+          >
+            <ng-template>
+              <ion-content>
+                <ion-searchbar
+                  placeholder="Buscar usuario"
+                  (ionInput)="filterUsers($event)"
+                  (click)="modal.setCurrentBreakpoint(0.75)"
+                ></ion-searchbar>
+                <ion-list>
+                  <ion-item
+                    style="cursor: pointer"
+                    *ngFor="let user of filteredUsers"
+                    (click)="selectUser(user)"
+                  >
+                    <ion-avatar slot="start">
+                      <ion-img src="assets/img/userAvatar.png"></ion-img>
+                    </ion-avatar>
+                    <ion-label>
+                      <h2>{{ user.name }} {{ user.lastname }}</h2>
+                      <p>{{ user.email }}</p>
+                      <ion-chip color="primary">{{
+                        user.secretariaName
+                      }}</ion-chip>
+                      <ion-chip color="primary">{{
+                        user.direccionName
+                      }}</ion-chip>
+                      <ion-chip color="primary">{{ user.job }}</ion-chip>
+                    </ion-label>
+                  </ion-item>
+                </ion-list>
+                <div *ngIf="filteredUsers!.length <= 0" class="ion-padding">
+                  <ion-note color="danger">Usuario no encontrado</ion-note>
+                </div>
+              </ion-content>
+            </ng-template>
+          </ion-modal>
+        </div>
+      </ion-item>
+      <!-- Search bar input for equipment -->
+      <ion-item>
+        <div class="user-container">
+          <ion-label>Seleccione equipo:</ion-label>
+          <div class="user-info">
+            <ion-text *ngIf="isEquipmentSelected">
+              {{ selectedEquipment.description }} ({{ selectedEquipment.type }})
+            </ion-text>
+            <ion-button
+              id="modal-equipos"
+              *ngIf="!isEquipmentSelected"
+              class="btnModalUser"
+              size="small"
+              mode="ios"
+              fill="outline"
+              (click)="openEquipmentModal()"
+              [disabled]="!isUserSelected"
+            >
+              Buscar equipo
+              <ion-icon slot="end" name="laptop-outline"></ion-icon>
+            </ion-button>
+            <ion-button
+              id="modal-equipos"
+              color="warning"
+              *ngIf="isEquipmentSelected"
+              size="small"
+              mode="ios"
+              fill="outline"
+              (click)="openEquipmentModal()"
+              [disabled]="!isUserSelected"
+            >
+              Cambiar equipo
+              <ion-icon slot="end" name="laptop-outline"></ion-icon>
+            </ion-button>
+          </div>
+          <ion-modal
+            #modalEquipos
+            trigger="modal-equipos"
+            [initialBreakpoint]="0.25"
+            [breakpoints]="[0.25, 0.5, 0.75]"
+            [backdropBreakpoint]="0.5"
+          >
+            <ng-template>
+              <ion-content>
+                <ion-searchbar
+                  placeholder="Buscar equipo"
+                  (ionInput)="searchEquipments($event)"
+                  (click)="modalEquipos.setCurrentBreakpoint(0.75)"
+                ></ion-searchbar>
+                <ion-list>
+                  <ion-item
+                    style="cursor: pointer"
+                    *ngFor="let equipment of filteredEquipments"
+                    (click)="selectEquipment(equipment)"
+                  >
+                    <ion-avatar slot="start">
+                      <ion-img src="assets/img/defaultDevice.png"></ion-img>
+                    </ion-avatar>
+                    <ion-label>
+                      <h2>{{ equipment.description }} {{ equipment.hdd }}</h2>
+                      <ion-chip color="success">{{ equipment.type }}</ion-chip>
+                      <ion-chip color="primary">{{
+                        equipment.userName
+                      }}</ion-chip>
+                    </ion-label>
+                  </ion-item>
+                </ion-list>
+                <div
+                  *ngIf="filteredEquipments!.length <= 0"
+                  class="ion-padding"
+                >
+                  <ion-note color="danger">Equipo no encontrado</ion-note>
+                </div>
+              </ion-content>
+            </ng-template>
+          </ion-modal>
+        </div>
+        <!-- Input para el ID del equipo -->
+        <ion-item *ngIf="selectedEquipment">
+          <ion-label position="stacked"
+            >ID del Equipo: {{ selectedEquipment._id }}</ion-label
+          >
+        </ion-item>
+        <!-- Input para el Código de Inventario -->
+        <ion-item *ngIf="selectedEquipment">
+          <ion-label position="stacked">Código de Inventario</ion-label>
+          <ion-input
+            formControlName="sindicatura_Inventory_Code"
+            type="text"
+          ></ion-input>
+        </ion-item>
+        <!-- Input para la IP asignada -->
+        <ion-item *ngIf="selectedEquipment">
+          <ion-label position="stacked">IP Asignada</ion-label>
+          <ion-input formControlName="assigned_ip" type="text"></ion-input>
+        </ion-item>
+        <ion-text
+          *ngIf="
+       abtactualizacionForm.get('assigned_ip')?.errors?.['pattern'] &&
+        abtactualizacionForm.get('assigned_ip')?.touched
+      "
+          color="danger"
+          class="ion-text-center"
+        >
+          <p>
+            La IP ingresada no es válida. Debe tener el formato: Ej. 192.168.0.1
+          </p>
+        </ion-text>
+        <!-- Input para la Descripción -->
+        <ion- *ngIf="selectedEquipment">
+          <ion-label position="stacked">Descripción</ion-label>
+          <ion-input formControlName="description" type="text"></ion-input>
+        </ion->
+        <!-- Input para la Dirección Ethernet -->
+        <ion-item *ngIf="selectedEquipment">
+          <ion-label position="stacked">Dirección Ethernet</ion-label>
+          <ion-input
+            formControlName="directionEthernet"
+            type="text"
+          ></ion-input>
+        </ion-item>
+        <!-- Input para el HDD -->
+        <ion-item *ngIf="selectedEquipment">
+          <ion-label position="stacked">HDD</ion-label>
+          <ion-input formControlName="hdd" type="text"></ion-input>
+        </ion-item>
+        <!-- FOTOS -->
+        <ion-item
+          *ngIf="selectedEquipment"
+          class="contenedor-btn-file"
+          (click)="inputImage()"
+        >
+          <label class="lblName" for="file">{{ txtDefault }} </label>
+          <!-- Input para cargar la imagen -->
+          <input
+            formControlName="photos"
+            #fileInput
+            id="file"
+            accept=".png, .jpg, jpeg"
+            multiple="true"
+            type="file"
+            (click)="$event.stopPropagation()"
+          />
+          <ion-icon slot="end" size="small" name="images-outline"></ion-icon>
+        </ion-item>
+        <!-- FOTOS DEL EQUIPO -->
+        <swiper-container
+          class="mySwiper"
+          pagination="true"
+          grab-cursor="true"
+          pagination-clickable="true"
+        >
+          <ng-container>
+            <swiper-slide *ngFor="let fotos of selectedEquipment?.photos">
+              <ion-col
+                *ngIf="selectedEquipment.photos.length >= 1"
+                size="12"
+                sizeMd="4"
+              >
+                <ion-item>
+                  <ion-img
+                    [src]="api + '/img/equipment/' + fotos"
+                    [alt]="fotos"
+                  ></ion-img>
+                </ion-item>
+              </ion-col>
+            </swiper-slide>
+          </ng-container>
+        </swiper-container>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Texto:</ion-label>
+        <ion-input
+          type="text"
+          formControlName="freeText"
+          placeholder="Redacte carta"
+        ></ion-input>
+      </ion-item>
+      <!--CON COPIA-->
+      <ion-item>
+        <div class="user-container">
+          <ion-label>Con copia a:</ion-label>
+          <div class="user-info">
+            <ion-text *ngIf="isConCopiaSelected">
+              {{ selectedConCopiaUser.name }}
+              {{ selectedConCopiaUser.lastname }}
+            </ion-text>
+            <ion-button
+              id="modal-concopia"
+              *ngIf="!isConCopiaSelected"
+              class="btnModalUser"
+              size="small"
+              mode="ios"
+              fill="outline"
+              (click)="openConCopiaModal()"
+            >
+              Buscar usuario
+              <ion-icon slot="end" name="person"></ion-icon>
+            </ion-button>
+            <ion-button
+              id="modal-concopia"
+              color="warning"
+              *ngIf="isConCopiaSelected"
+              size="small"
+              mode="ios"
+              fill="outline"
+              (click)="openConCopiaModal()"
+            >
+              Buscar otro usuario
+              <ion-icon slot="end" name="person"></ion-icon>
+            </ion-button>
+          </div>
+          <ion-modal
+            #modalConCopia
+            trigger="modal-concopia"
+            [initialBreakpoint]="0.25"
+            [breakpoints]="[0.25, 0.5, 0.75]"
+            [backdropBreakpoint]="0.5"
+          >
+            <ng-template>
+              <ion-content>
+                <ion-searchbar
+                  placeholder="Buscar usuario"
+                  (ionInput)="filterUsers($event)"
+                  (click)="modalConCopia.setCurrentBreakpoint(0.75)"
+                ></ion-searchbar>
+                <ion-list>
+                  <ion-item
+                    style="cursor: pointer"
+                    *ngFor="let user of filteredConCopiaUsers"
+                    (click)="selectConCopiaUser(user)"
+                  >
+                    <ion-avatar slot="start">
+                      <ion-img src="assets/img/userAvatar.png"></ion-img>
+                    </ion-avatar>
+                    <ion-label>
+                      <h2>{{ user.name }} {{ user.lastname }}</h2>
+                      <p>{{ user.email }}</p>
+                    </ion-label>
+                  </ion-item>
+                </ion-list>
+                <div
+                  *ngIf="filterConCopiaUsers!.length <= 0"
+                  class="ion-padding"
+                >
+                  <ion-note color="danger">Usuario no encontrado</ion-note>
+                </div>
+              </ion-content>
+            </ng-template>
+          </ion-modal>
+        </div>
+      </ion-item>
+      <!--LISTA DE CONCOPIAS-->
+      <ion-list>
+        <ion-item *ngFor="let user of conCopiaUsers; let i = index">
+          {{ user.name }} {{ user.lastname }}
+          <ion-button
+            (click)="removeConCopiaUser(i)"
+            expand="block"
+            color="danger"
+            shape="round"
+          >
+            <ion-icon name="close"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-list>
+
+      <ion-progress-bar
+        type="indeterminate"
+        *ngIf="isProgressVisible"
+      ></ion-progress-bar>
+    </ion-list>
+    <ion-footer class="ion-no-border button-container">
+      <!--Botón para REGISTRAR-->
+      <ion-button
+        (click)="onSubmit()"
+        [disabled]="abtactualizacionForm.invalid && isProgressVisible"
+        shape="round"
+        >ACTUALIZAR EQUIPO</ion-button
+      >
+    </ion-footer>
+  </form>
+</ion-content>

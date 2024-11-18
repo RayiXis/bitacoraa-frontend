@@ -1,0 +1,88 @@
+<ion-header mode="ios">
+  <ion-toolbar>
+    <ion-title>{{ requestSoli ? "EDITAR EQUIPO" : "REGISTRAR EQUIPO" }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="outline" color="danger" (click)="cancelSolicitud()">
+        Cancelar
+        <ion-icon slot="end" name="close-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding modal-requestEquipment">
+  <form
+    [formGroup]="solicitarEquipoForm"
+    autocomplete="off"
+  >
+    <ion-item class="itemDate">
+      <ion-label position="stacked">Seleccionar fecha y hora</ion-label>
+      <!-- Input para seleccionar fecha -->
+      <ion-datetime-button mode="ios" datetime="datetime"></ion-datetime-button>
+
+      <ion-modal mode="ios" [keepContentsMounted]="true">
+        <ng-template>
+          <ion-datetime
+            id="datetime"
+            (ionChange)="handleDateChange($event.detail.value)"
+            hour-cycle="h12"
+            locale="es-ES"
+            [min]="currentDate.slice(0,10)"
+            [value]="adjustInitDate()"
+            showDefaultButtons="true"
+          ></ion-datetime>
+        </ng-template>
+      </ion-modal>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">*Horas de uso</ion-label>
+      <!-- Combo box con opciones de horas -->
+      <ion-select formControlName="hours" [value]="requestSoli?.useHours">
+        <ion-select-option value="1">1 hora</ion-select-option>
+        <ion-select-option value="2">2 horas</ion-select-option>
+        <ion-select-option value="3">3 horas</ion-select-option>
+        <ion-select-option value="4">4 horas</ion-select-option>
+        <ion-select-option value="+5">+5 horas</ion-select-option>
+      </ion-select>
+      <ion-note color="danger" *ngIf="isValidField('hours')">
+        Este campo es obligatorio
+      </ion-note>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">*Equipo</ion-label>
+      <!-- Combo box con opciones de equipos -->
+      <ion-select formControlName="equip" [value]="requestSoli?.equipment">
+        <ion-select-option *ngFor="let equipo of equipos" [value]="equipo._id">{{ equipo.description }}</ion-select-option>
+      </ion-select>
+      <ion-note color="danger" *ngIf="isValidField('equip')">
+        Este campo es obligatorio
+      </ion-note>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">*Lugar</ion-label>
+      <ion-input placeholder="Sala Presidentes" formControlName="place"></ion-input>
+      <ion-note color="danger" *ngIf="isValidField('place')">
+        Este campo es obligatorio
+      </ion-note>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">*Motivo</ion-label>
+      <!-- Textarea para motivo -->
+      <ion-textarea placeholder="Habrá una junta" formControlName="reason" rows="4"></ion-textarea>
+      <ion-note color="danger" *ngIf="isValidField('reason')">
+        Este campo es obligatorio
+      </ion-note>
+    </ion-item>
+  </form>
+</ion-content>
+
+<ion-footer mode="ios">
+  <ion-button size="large" mode="ios" expand="block" (click)="sendSolicitud()" color="success">
+    Aceptar
+    <ion-icon name="checkmark-circle-outline"></ion-icon>
+  </ion-button>
+</ion-footer>

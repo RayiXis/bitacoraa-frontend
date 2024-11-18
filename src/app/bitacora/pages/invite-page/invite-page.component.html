@@ -1,0 +1,43 @@
+<ion-content id="main-content" class="invite-content ion-padding">
+  <div class="invite-box">
+    <ion-header class="ion-no-border" mode="md">
+      <ion-title>Enviar Invitaciones</ion-title>
+    </ion-header>
+
+    <form (ngSubmit)="enviarCorreo()">
+      <ion-label position="floating">CORREO ELECTRONICO:</ion-label>
+      <ion-input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="prueba@gmail.com"
+        helperText="Ingresar correo a invitar"
+        [(ngModel)]="addEmail"
+      ></ion-input>
+      <ion-button (click)="agregarCorreo()" shape="round">
+        Agregar correo
+      </ion-button>
+    </form>
+  </div>
+
+  <ion-list class="email-list">
+    <ion-list-header> Correos a los que se enviara invitacion </ion-list-header>
+    <ion-item *ngFor="let email of emails; let i = index">
+      {{ email }}
+
+      <ion-button
+        (click)="eliminarCorreo(i)"
+        expand="block"
+        color="danger"
+        shape="round"
+      >
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-item>
+    <ion-item>
+      <ion-button (click)="confirmInvites()" shape="round">
+        Enviar invitacion
+      </ion-button>
+    </ion-item>
+  </ion-list>
+</ion-content>

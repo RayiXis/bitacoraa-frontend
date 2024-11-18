@@ -1,0 +1,31 @@
+ion-tab-button {
+  --ripple-color: var(--ion-color-primary-contrast)
+}
+// .icon {
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     height: 40%;
+
+// }
+
+// ion-tab-bar,
+// ion-tab-button {
+//     background-color: #3880FF;
+//     color: white;
+//     font-weight: 500;
+//     transition: transform 0.8s ease;
+// }
+
+// ion-tab-button:hover ion-icon,
+// ion-tab-button:hover span {
+//     color: white;
+//     font-weight: 500;
+//     transform: scale(1.2);
+// }
+
+// @media (max-width: 626px) {
+//   ion-popover {
+//     --width: 10rem; /* Ancho del popover en pantallas pequeñas, usando 90% del ancho de la ventana */
+//   }
+// }

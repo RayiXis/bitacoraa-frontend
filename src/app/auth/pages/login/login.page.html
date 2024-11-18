@@ -1,0 +1,88 @@
+<ion-content class="login-content">
+  <div class="center-box">
+    <!-- Contenedor principal centrado -->
+    <div class="login-box">
+      <!-- Contenedor del formulario de inicio de sesión -->
+      <h2 class="login-title">BITACORA</h2>
+      <ion-note color="medium"> version de la aplicación 1.0.3 </ion-note>
+      <h3 class="login-subtitle">INICIAR SESION</h3>
+      <!-- Formulario de inicio de sesión -->
+      <form autocomplete="off" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <!-- Campo para el correo electrónico -->
+        <ion-item [class.error]="email.invalid && email.touched">
+          <ion-label position="floating">Correo Electronico</ion-label>
+          <ion-input type="email" formControlName="email" required></ion-input>
+          <ion-icon name="person-sharp" slot="start"></ion-icon>
+
+          <!-- Icono de advertencia si el campo es inválido -->
+          <ion-icon
+            name="alert-circle"
+            *ngIf="email.invalid && email.touched"
+            [color]="email.invalid && email.touched ? 'danger' : 'small'"
+            slot="end"
+          ></ion-icon>
+        </ion-item>
+        <!-- Mensaje de error si el campo de correo es inválido y se ha tocado -->
+        <ion-note
+          color="danger"
+          *ngIf="email.invalid && email.touched"
+          class="required-text"
+        >
+          Correo electronico es obligatorio
+        </ion-note>
+        <!-- Campo para la contraseña -->
+        <ion-item [class.error]="password.invalid && password.touched">
+          <ion-label position="floating">Contraseña</ion-label>
+          <ion-input
+            [type]="passwordType"
+            formControlName="password"
+            required
+          ></ion-input>
+          <ion-icon name="shield-sharp" slot="start"></ion-icon>
+
+          <!-- Botón para alternar la visibilidad de la contraseña -->
+          <ion-button
+            slot="end"
+            fill="clear"
+            shape="round"
+            (click)="togglePassword()"
+          >
+            <ion-icon [name]="showPassword ? 'eye-off' : 'eye'"></ion-icon>
+          </ion-button>
+
+          <!-- Icono de advertencia si el campo es inválido -->
+          <ion-icon
+            name="alert-circle"
+            *ngIf="password.invalid && password.touched"
+            color="danger"
+            slot="end"
+          ></ion-icon>
+        </ion-item>
+
+        <!-- Mensaje de error si el campo de contraseña es inválido y se ha tocado -->
+        <ion-note
+          color="danger"
+          *ngIf="password.invalid && password.touched"
+          class="required-text"
+        >
+          Contraseña es obligatoria
+        </ion-note>
+
+        <!-- Botón para iniciar sesión -->
+        <ion-button
+          [disabled]="!loginForm.valid"
+          class="center-button"
+          (click)="iniciarSesion()"
+          shape="round"
+          >INICIAR SESIÓN</ion-button
+        >
+      </form>
+      <!-- Enlace para recuperar contraseña -->
+      <p>
+        <a (click)="forgotPassword()" style="cursor: pointer"
+          >¿Olvidaste contraseña? Recuperar contraseña</a
+        >
+      </p>
+    </div>
+  </div>
+</ion-content>

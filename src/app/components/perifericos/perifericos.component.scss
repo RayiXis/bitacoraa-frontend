@@ -1,0 +1,113 @@
+.input-group {
+  ion-item {
+    width: calc(100% - 40px);
+    margin: 10px 20px;
+  }
+
+  ion-label {
+    font-size: 20px;
+  }
+
+  ion-input {
+    --padding-start: 8px;
+    --padding-end: 8px;
+  }
+
+  /* Agregamos estilos para centrar los botones */
+  .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+}
+
+.centered-select {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  ion-select {
+    max-width: 300px; /* Ajusta el ancho máximo del ion-select */
+    width: 100%; /* Asegúrate de que el select no se expanda más allá del máximo */
+  }
+}
+
+.btns {
+  display: flex;
+  justify-content: center;
+}
+
+.btnMd {
+  --border-radius: 10px;
+}
+
+ion-footer.button-container {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+}
+
+ion-button {
+  max-width: 300px;
+}
+
+.dropdown-list {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  position: relative;
+  z-index: 1000;
+}
+
+.dropdown-item {
+  padding: 16px;
+  font-size: 16px;
+}
+.contenedor-btn-file {
+  cursor: pointer;
+  // width: 100%;
+  display: flex;
+  // position: relative;
+  // overflow: hidden;
+  // border-radius: 8px;
+  align-items: center;
+
+  // input[type="file"] {
+  //   display: none;
+  // }
+
+  // .lblName {
+  //   cursor: pointer;
+  //   font-size: 12px;
+  // }
+}
+.contenedor-btn-file ion-icon {
+  margin-left: auto;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.contenedor-btn-file .lblName {
+  cursor: pointer;
+  flex: 1;
+}
+
+input[type="file"] {
+  display: none;
+}
+.btnModalUser {
+  margin-top: 10px;
+}
+.user-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 15px;
+}
